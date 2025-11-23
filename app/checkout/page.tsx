@@ -29,15 +29,10 @@ export default function CheckoutPage() {
   };
 
   const handleAddressClick = () => {
-    // TODO: Open address selector modal or navigate to address selection page
     if (addresses.length === 0) {
-      toast.error('Please add a shipping address first');
-      // In future: router.push('/account/addresses/new');
+      router.push('/account/addresses/new');
     } else {
-      toast('Address selector will be implemented', {
-        icon: 'ℹ️',
-      });
-      // In future: Open modal to select from existing addresses
+      router.push('/account/addresses');
     }
   };
 

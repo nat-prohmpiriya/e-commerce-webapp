@@ -54,28 +54,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     firebaseUser: FirebaseUser,
     additionalData?: { displayName?: string }
   ) => {
-    const userRef = doc(db, 'users', firebaseUser.uid);
-    const userSnap = await getDoc(userRef);
+    try {
+      const userRef = doc(db, 'users', firebaseUser.uid);
+      const userSnap = await getDoc(userRef);
 
-    if (!userSnap.exists()) {
-      const newUser: User = {
+      if (!userSnap.exists()) {
+        const newUser: User = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email || '',
+          displayName: additionalData?.displayName || firebaseUser.displayName || '',
+          photoURL: firebaseUser.photoURL || undefined,
+          phoneNumber: firebaseUser.phoneNumber || undefined,
+          role: 'customer',
+          createdAt: new Date() as any,
+          updatedAt: new Date() as any,
+          addresses: [],
+          paymentMethods: [],
+        };
+
+        await setDoc(userRef, newUser);
+        return newUser;
+      }
+
+      return userSnap.data() as User;
+    } catch (error) {
+      console.error('Error creating user document:', error);
+      // Return a minimal user object if Firestore fails
+      return {
         id: firebaseUser.uid,
         email: firebaseUser.email || '',
         displayName: additionalData?.displayName || firebaseUser.displayName || '',
         photoURL: firebaseUser.photoURL || undefined,
         phoneNumber: firebaseUser.phoneNumber || undefined,
-        role: 'customer',
+        role: 'customer' as const,
         createdAt: new Date() as any,
         updatedAt: new Date() as any,
         addresses: [],
         paymentMethods: [],
       };
-
-      await setDoc(userRef, newUser);
-      return newUser;
     }
-
-    return userSnap.data() as User;
   };
 
   // Sign in with email and password
@@ -162,13 +179,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setFirebaseUser(firebaseUser);
 
       if (firebaseUser) {
-        const userData = await fetchUserData(firebaseUser.uid);
-        if (userData) {
-          setUser(userData);
-        } else {
-          // Create user document if it doesn't exist
-          const newUser = await createUserDocument(firebaseUser);
-          setUser(newUser);
+        try {
+          const userData = await fetchUserData(firebaseUser.uid);
+          if (userData) {
+            setUser(userData);
+          } else {
+            // Create user document if it doesn't exist
+            const newUser = await createUserDocument(firebaseUser);
+            setUser(newUser);
+          }
+        } catch (error) {
+          console.error('Error in auth state change handler:', error);
+          // Create a basic user object from Firebase Auth data if Firestore fails
+          setUser({
+            id: firebaseUser.uid,
+            email: firebaseUser.email || '',
+            displayName: firebaseUser.displayName || '',
+            photoURL: firebaseUser.photoURL || undefined,
+            phoneNumber: firebaseUser.phoneNumber || undefined,
+            role: 'customer' as const,
+            createdAt: new Date() as any,
+            updatedAt: new Date() as any,
+            addresses: [],
+            paymentMethods: [],
+          });
         }
       } else {
         setUser(null);

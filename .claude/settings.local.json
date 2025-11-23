@@ -4,7 +4,8 @@
       "Bash(npm uninstall:*)",
       "Bash(cat:*)",
       "Bash(npm install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []
