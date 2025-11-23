@@ -5,12 +5,17 @@ import { Home, ShoppingBag, Heart, User, Package, Settings, LogOut } from 'lucid
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslations, useLocale } from 'next-intl';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function SideNav() {
     const router = useRouter();
     const pathname = usePathname();
+    const locale = useLocale();
+    const t = useTranslations('Navigation');
+    const tAuth = useTranslations('Auth');
     const { user, signOut } = useAuth();
     const { getCartItemCount } = useCart();
     const { getWishlistCount } = useWishlist();
@@ -26,36 +31,36 @@ export default function SideNav() {
     const navItems = [
         {
             icon: Home,
-            label: 'Home',
-            path: '/',
+            label: t('home'),
+            path: `/${locale}`,
             badge: 0,
             requireAuth: false
         },
         {
             icon: ShoppingBag,
-            label: 'Cart',
-            path: '/cart',
+            label: t('cart'),
+            path: `/${locale}/cart`,
             badge: cartCount,
             requireAuth: false
         },
         {
             icon: Heart,
-            label: 'Favorites',
-            path: '/favorites',
+            label: t('favorites'),
+            path: `/${locale}/favorites`,
             badge: wishlistCount,
             requireAuth: true
         },
         {
             icon: Package,
-            label: 'Orders',
-            path: '/account/orders',
+            label: t('orders'),
+            path: `/${locale}/account/orders`,
             badge: 0,
             requireAuth: true
         },
         {
             icon: User,
-            label: 'Account',
-            path: '/account',
+            label: t('account'),
+            path: `/${locale}/account`,
             badge: 0,
             requireAuth: true
         },
@@ -63,8 +68,8 @@ export default function SideNav() {
 
     const handleNavClick = (item: typeof navItems[0]) => {
         if (item.requireAuth && !user) {
-            toast.error('Please sign in to access this feature');
-            router.push('/login');
+            toast.error(tAuth('pleaseSignIn'));
+            router.push(`/${locale}/login`);
             return;
         }
         router.push(item.path);
@@ -73,10 +78,10 @@ export default function SideNav() {
     const handleSignOut = async () => {
         try {
             await signOut();
-            toast.success('Signed out successfully');
-            router.push('/');
+            toast.success(tAuth('signedOutSuccess'));
+            router.push(`/${locale}`);
         } catch (error) {
-            toast.error('Failed to sign out');
+            toast.error(tAuth('signOutFailed'));
         }
     };
 
@@ -151,6 +156,9 @@ export default function SideNav() {
                 </ul>
             </nav>
 
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
             {/* Bottom Actions */}
             <div className="p-4 border-t border-gray-200">
                 {user ? (
@@ -159,14 +167,14 @@ export default function SideNav() {
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-all"
                     >
                         <LogOut size={20} />
-                        <span className="font-medium">Sign Out</span>
+                        <span className="font-medium">{t('signOut')}</span>
                     </button>
                 ) : (
                     <button
-                        onClick={() => router.push('/login')}
+                        onClick={() => router.push(`/${locale}/login`)}
                         className="w-full bg-black text-white px-4 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
                     >
-                        Sign In
+                        {t('signIn')}
                     </button>
                 )}
             </div>

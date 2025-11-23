@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { getProductName, getProductCategory, type Locale } from '@/utils/localization';
 
 interface ProductCardProps {
   product: Product;
@@ -12,8 +14,12 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
+  const locale = useLocale() as Locale;
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const isFavorite = isInWishlist(product.id);
+
+  const productName = getProductName(product, locale);
+  const productCategory = getProductCategory(product, locale);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -25,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const handleCardClick = () => {
-    router.push(`/products/${product.id}`);
+    router.push(`/${locale}/products/${product.id}`);
   };
 
   const displayPrice = product.salePrice || product.price;
@@ -39,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="relative aspect-[3/4] bg-gray-100">
         <Image
           src={product.images[0]}
-          alt={product.name}
+          alt={productName}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -62,9 +68,9 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Info */}
       <div className="p-3">
         <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
-          {product.name}
+          {productName}
         </h3>
-        <p className="text-xs text-gray-500 mb-2">{product.category}</p>
+        <p className="text-xs text-gray-500 mb-2">{productCategory}</p>
         <div className="flex items-center justify-between">
           <span className="font-bold text-gray-900">${displayPrice}</span>
           <div className="flex items-center gap-1">

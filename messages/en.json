@@ -1,0 +1,111 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "reset": "Reset",
+    "apply": "Apply",
+    "close": "Close",
+    "backToHome": "Back to Home"
+  },
+  "Header": {
+    "greeting": "Hello, Welcome 👋",
+    "guest": "Guest",
+    "title": "Discover Products",
+    "subtitle": "Find your perfect style",
+    "searchPlaceholder": "Search clothes..."
+  },
+  "Navigation": {
+    "home": "Home",
+    "cart": "Cart",
+    "favorites": "Favorites",
+    "orders": "Orders",
+    "account": "Account",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "settings": "Settings"
+  },
+  "Category": {
+    "all": "All"
+  },
+  "Product": {
+    "productDetails": "Product Details",
+    "price": "Price",
+    "salePrice": "Sale Price",
+    "stock": "Stock",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "addToCart": "Add to Cart",
+    "addedToCart": "Added {quantity} items to cart!",
+    "addedToCartSingle": "Added {quantity} item to cart!",
+    "chooseSize": "Choose Size",
+    "chooseColor": "Color",
+    "quantity": "Quantity",
+    "description": "Description",
+    "readMore": "Read More...",
+    "readLess": "Read Less",
+    "reviews": "reviews",
+    "rating": "Rating",
+    "notFound": "Product not found",
+    "notAvailable": "This product is not available",
+    "selectColor": "Please select a color",
+    "noProducts": "No products found in this category",
+    "loadingProducts": "Loading products..."
+  },
+  "Filter": {
+    "title": "Filters",
+    "sortBy": "Sort By",
+    "newest": "Newest First",
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
+    "nameAsc": "Name: A to Z",
+    "nameDesc": "Name: Z to A",
+    "priceRange": "Price Range",
+    "categories": "Categories",
+    "availability": "Availability",
+    "inStockOnly": "In Stock Only",
+    "showOnlyAvailable": "Show only available products",
+    "reset": "Reset",
+    "applyFilters": "Apply Filters"
+  },
+  "Cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "removeItem": "Remove",
+    "updateQuantity": "Update Quantity"
+  },
+  "Auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "signInWithGoogle": "Sign in with Google",
+    "pleaseSignIn": "Please sign in to access this feature",
+    "signedOutSuccess": "Signed out successfully",
+    "signOutFailed": "Failed to sign out"
+  },
+  "Settings": {
+    "title": "Settings",
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "thai": "ไทย",
+    "english": "English"
+  }
+}

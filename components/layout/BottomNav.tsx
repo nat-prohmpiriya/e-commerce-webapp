@@ -5,11 +5,15 @@ import { Bell, ShoppingBag, Heart, User, Home } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslations, useLocale } from 'next-intl';
 import toast from 'react-hot-toast';
 
 export default function BottomNav() {
     const router = useRouter();
     const pathname = usePathname();
+    const locale = useLocale();
+    const t = useTranslations('Navigation');
+    const tAuth = useTranslations('Auth');
     const { user } = useAuth();
     const { getCartItemCount } = useCart();
     const { getWishlistCount } = useWishlist();
@@ -20,29 +24,29 @@ export default function BottomNav() {
     const navItems = [
         {
             icon: Home,
-            label: 'Home',
-            path: '/',
+            label: t('home'),
+            path: `/${locale}`,
             badge: 0,
             requireAuth: false
         },
         {
             icon: ShoppingBag,
-            label: 'Cart',
-            path: '/cart',
+            label: t('cart'),
+            path: `/${locale}/cart`,
             badge: cartCount,
             requireAuth: false
         },
         {
             icon: Heart,
-            label: 'Favorites',
-            path: '/favorites',
+            label: t('favorites'),
+            path: `/${locale}/favorites`,
             badge: wishlistCount,
             requireAuth: true
         },
         {
             icon: User,
-            label: 'Account',
-            path: '/account',
+            label: t('account'),
+            path: `/${locale}/account`,
             badge: 0,
             requireAuth: true
         },
@@ -50,8 +54,8 @@ export default function BottomNav() {
 
     const handleNavClick = (item: typeof navItems[0]) => {
         if (item.requireAuth && !user) {
-            toast.error('Please sign in to access this feature');
-            router.push('/login');
+            toast.error(tAuth('pleaseSignIn'));
+            router.push(`/${locale}/login`);
             return;
         }
         router.push(item.path);

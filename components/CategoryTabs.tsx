@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import { useCategory } from '@/context/CategoryContext';
+import { useTranslations, useLocale } from 'next-intl';
+import { getCategoryName, type Locale } from '@/utils/localization';
 import { LayoutGrid, Shirt, Package, Wind, Zap } from 'lucide-react';
 
 interface CategoryTabsProps {
@@ -10,6 +12,8 @@ interface CategoryTabsProps {
 
 export default function CategoryTabs({ onCategoryChange }: CategoryTabsProps) {
   const [activeCategory, setActiveCategory] = useState('all');
+  const locale = useLocale() as Locale;
+  const t = useTranslations('Category');
   const { activeCategories, loading } = useCategory();
 
   const handleCategoryClick = (categorySlug: string) => {
@@ -29,14 +33,14 @@ export default function CategoryTabs({ onCategoryChange }: CategoryTabsProps) {
   // Prepare categories with "All" as first item
   const displayCategories = useMemo(() => {
     return [
-      { id: 'all', name: 'All', slug: 'all' },
+      { id: 'all', name: t('all'), slug: 'all' },
       ...activeCategories.map(cat => ({
         id: cat.id,
-        name: cat.name,
+        name: getCategoryName(cat, locale),
         slug: cat.slug
       }))
     ];
-  }, [activeCategories]);
+  }, [activeCategories, locale, t]);
 
   if (loading) {
     return (

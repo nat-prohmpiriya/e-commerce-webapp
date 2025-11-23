@@ -50,9 +50,14 @@ export interface ProductColor {
 
 export interface Product {
   id: string;
-  name: string;
-  description: string;
-  category: string;
+  // Multi-language fields
+  name_th: string;
+  name_en: string;
+  description_th: string;
+  description_en: string;
+  category_th: string;
+  category_en: string;
+  // Shared fields (same for all languages)
   price: number;
   salePrice?: number;
   images: string[];
@@ -64,6 +69,14 @@ export interface Product {
   isPublished: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+
+  // Deprecated fields - keep for backward compatibility
+  /** @deprecated Use name_th or name_en instead */
+  name?: string;
+  /** @deprecated Use description_th or description_en instead */
+  description?: string;
+  /** @deprecated Use category_th or category_en instead */
+  category?: string;
 }
 
 // ==================== Cart Types ====================
@@ -192,10 +205,21 @@ export type ProductCategory = 'All Items' | 'Dress' | 'T-Shirt' | 'Pants' | 'Acc
 
 export interface Category {
   id: string;
-  name: string;
-  slug: string;
-  description?: string;
+  // Multi-language fields
+  name_th: string;
+  name_en: string;
+  description_th?: string;
+  description_en?: string;
+  // Shared fields
+  slug: string; // URL-friendly identifier (same for all languages)
   imageUrl?: string;
   productCount: number;
   isActive: boolean;
+  order?: number; // Display order
+
+  // Deprecated fields - keep for backward compatibility
+  /** @deprecated Use name_th or name_en instead */
+  name?: string;
+  /** @deprecated Use description_th or description_en instead */
+  description?: string;
 }

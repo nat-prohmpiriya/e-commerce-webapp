@@ -7,11 +7,16 @@ import { ChevronLeft, Heart, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useProduct } from '@/context/ProductContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
+import { useTranslations, useLocale } from 'next-intl';
+import { getProductName, getProductDescription, getProductCategory, type Locale } from '@/utils/localization';
 import toast from 'react-hot-toast';
 
 export default function ProductDetailPage() {
     const params = useParams();
     const router = useRouter();
+    const locale = useLocale() as Locale;
+    const t = useTranslations('Product');
+    const tCommon = useTranslations('Common');
     const productId = params.productId as string;
 
     const { getProductById, loading } = useProduct();
@@ -80,6 +85,11 @@ export default function ProductDetailPage() {
     const displayPrice = product.salePrice || product.price;
     const originalPrice = product.salePrice ? product.price : null;
 
+    // Get localized product data
+    const productName = getProductName(product, locale);
+    const productDescription = getProductDescription(product, locale);
+    const productCategory = getProductCategory(product, locale);
+
     const handleToggleFavorite = () => {
         if (isFavorite) {
             removeFromWishlist(product.id);
@@ -97,13 +107,13 @@ export default function ProductDetailPage() {
 
     const handleAddToCart = () => {
         if (!selectedColor) {
-            toast.error('Please select a color');
+            toast.error(t('selectColor'));
             return;
         }
 
         addToCart({
             productId: product.id,
-            productName: product.name,
+            productName: productName,
             productImage: product.images[0],
             quantity,
             size: selectedSize,
@@ -112,7 +122,8 @@ export default function ProductDetailPage() {
             salePrice: product.salePrice
         });
 
-        toast.success(`Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`);
+        const message = quantity > 1 ? t('addedToCart', { quantity }) : t('addedToCartSingle', { quantity });
+        toast.success(message);
     };
 
     return (
@@ -125,7 +136,7 @@ export default function ProductDetailPage() {
                 >
                     <ChevronLeft size={24} />
                 </button>
-                <span className="font-semibold text-gray-900">Product Details</span>
+                <span className="font-semibold text-gray-900">{t('productDetails')}</span>
             </div>
 
             {/* Desktop Layout: 2 Columns */}
@@ -136,7 +147,7 @@ export default function ProductDetailPage() {
                         <div className="relative aspect-[3/4] md:aspect-square bg-gray-200 rounded-2xl overflow-hidden">
                             <Image
                                 src={product.images[0]}
-                                alt={product.name}
+                                alt={productName}
                                 fill
                                 className="object-cover"
                                 priority
@@ -159,11 +170,11 @@ export default function ProductDetailPage() {
                     <div className="bg-white md:bg-transparent rounded-t-3xl md:rounded-none -mt-6 md:mt-0 relative px-6 md:px-0 pt-6 md:pt-0">
                 {/* Product Name */}
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                    {product.name}
+                    {productName}
                 </h1>
 
                 {/* Category */}
-                <p className="text-sm text-gray-500 mb-3">{product.category}</p>
+                <p className="text-sm text-gray-500 mb-3">{productCategory}</p>
 
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-4">
