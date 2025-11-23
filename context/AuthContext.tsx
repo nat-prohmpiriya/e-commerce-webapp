@@ -20,6 +20,7 @@ interface AuthContextType {
   user: User | null;
   firebaseUser: FirebaseUser | null;
   loading: boolean;
+  isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, displayName: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
@@ -248,6 +249,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     firebaseUser,
     loading,
+    isAdmin: user?.role === 'admin',
     signIn,
     signUp,
     signInWithGoogle,
