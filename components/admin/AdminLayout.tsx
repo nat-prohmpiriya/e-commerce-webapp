@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronRight,
   FolderOpen,
+  Database,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -52,6 +53,11 @@ const navigation = [
     name: 'Discounts',
     href: '/admin/discounts',
     icon: Tag,
+  },
+  {
+    name: 'Seed Database',
+    href: '/admin/seed',
+    icon: Database,
   },
   {
     name: 'Settings',
