@@ -184,7 +184,14 @@ export default function OrderDetailPage() {
                               hour: 'numeric',
                               minute: '2-digit',
                             })
-                          : new Date(order.createdAt).toLocaleString('en-US', {
+                          : (order.createdAt as any).toDate
+                          ? (order.createdAt as any).toDate().toLocaleString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              hour: 'numeric',
+                              minute: '2-digit',
+                            })
+                          : new Date(order.createdAt as any).toLocaleString('en-US', {
                               month: 'short',
                               day: 'numeric',
                               hour: 'numeric',
@@ -214,7 +221,13 @@ export default function OrderDetailPage() {
                       month: 'short',
                       day: 'numeric',
                     })
-                  : new Date(order.estimatedDeliveryDate).toLocaleDateString('en-US', {
+                  : (order.estimatedDeliveryDate as any).toDate
+                  ? (order.estimatedDeliveryDate as any).toDate().toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric',
+                    })
+                  : new Date(order.estimatedDeliveryDate as any).toLocaleDateString('en-US', {
                       weekday: 'short',
                       month: 'short',
                       day: 'numeric',

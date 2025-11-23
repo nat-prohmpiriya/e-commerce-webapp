@@ -151,7 +151,9 @@ export default function AdminOrderDetailPage() {
                 <span className="text-gray-600">
                   {order.createdAt instanceof Date
                     ? order.createdAt.toLocaleString()
-                    : new Date(order.createdAt).toLocaleString()}
+                    : (order.createdAt as any).toDate
+                    ? (order.createdAt as any).toDate().toLocaleString()
+                    : new Date(order.createdAt as any).toLocaleString()}
                 </span>
               </div>
             </div>

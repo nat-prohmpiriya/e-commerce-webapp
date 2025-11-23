@@ -120,10 +120,10 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
       // Prepare order data with Timestamp conversion
       const orderData = {
         ...order,
-        createdAt: Timestamp.fromDate(order.createdAt instanceof Date ? order.createdAt : new Date(order.createdAt)),
-        updatedAt: Timestamp.fromDate(order.updatedAt instanceof Date ? order.updatedAt : new Date(order.updatedAt)),
+        createdAt: Timestamp.fromDate(order.createdAt instanceof Date ? order.createdAt : (order.createdAt as any).toDate ? (order.createdAt as any).toDate() : new Date(order.createdAt as any)),
+        updatedAt: Timestamp.fromDate(order.updatedAt instanceof Date ? order.updatedAt : (order.updatedAt as any).toDate ? (order.updatedAt as any).toDate() : new Date(order.updatedAt as any)),
         estimatedDeliveryDate: order.estimatedDeliveryDate
-          ? Timestamp.fromDate(order.estimatedDeliveryDate instanceof Date ? order.estimatedDeliveryDate : new Date(order.estimatedDeliveryDate))
+          ? Timestamp.fromDate(order.estimatedDeliveryDate instanceof Date ? order.estimatedDeliveryDate : (order.estimatedDeliveryDate as any).toDate ? (order.estimatedDeliveryDate as any).toDate() : new Date(order.estimatedDeliveryDate as any))
           : null,
       };
 
@@ -170,9 +170,10 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   // Create new order
   const createOrder = async (orderData: CreateOrderData): Promise<Order> => {
-    const now = new Date();
-    const estimatedDelivery = new Date();
-    estimatedDelivery.setDate(estimatedDelivery.getDate() + 7); // 7 days from now
+    const now = Timestamp.now();
+    const estimatedDeliveryDate = new Date();
+    estimatedDeliveryDate.setDate(estimatedDeliveryDate.getDate() + 7); // 7 days from now
+    const estimatedDelivery = Timestamp.fromDate(estimatedDeliveryDate);
 
     const newOrder: Order = {
       id: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,

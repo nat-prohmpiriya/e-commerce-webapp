@@ -101,7 +101,13 @@ export default function OrdersPage() {
                             month: 'long',
                             day: 'numeric',
                           })
-                        : new Date(order.createdAt).toLocaleDateString('en-US', {
+                        : (order.createdAt as any).toDate
+                        ? (order.createdAt as any).toDate().toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })
+                        : new Date(order.createdAt as any).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',
