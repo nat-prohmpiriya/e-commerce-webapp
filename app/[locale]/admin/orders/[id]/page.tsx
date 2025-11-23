@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useOrder } from '@/context/OrderContext';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -9,6 +9,7 @@ import { ArrowLeft, Package, MapPin, CreditCard, User, Calendar } from 'lucide-r
 import { OrderStatus } from '@/types';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 const statusOptions: { value: OrderStatus; label: string; color: string }[] = [
   { value: 'pending', label: 'Pending', color: 'bg-gray-100 text-gray-800' },
@@ -21,6 +22,7 @@ const statusOptions: { value: OrderStatus; label: string; color: string }[] = [
 export default function AdminOrderDetailPage() {
   const router = useRouter();
   const params = useParams();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { getAllOrders, updateOrderStatus } = useOrder();
 
@@ -46,7 +48,7 @@ export default function AdminOrderDetailPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -55,7 +57,7 @@ export default function AdminOrderDetailPage() {
     return (
       <AdminLayout>
         <div className="text-center py-12">
-          <div className="text-gray-500">Loading order...</div>
+          <div className="text-gray-500">{t('loadingOrder')}</div>
         </div>
       </AdminLayout>
     );
@@ -66,12 +68,12 @@ export default function AdminOrderDetailPage() {
       <AdminLayout>
         <div className="text-center py-12">
           <Package size={64} className="text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">Order not found</p>
+          <p className="text-gray-500 mb-4">{t('orderNotFound')}</p>
           <button
             onClick={() => router.push('/admin/orders')}
             className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800"
           >
-            Back to Orders
+            {t('backToOrders')}
           </button>
         </div>
       </AdminLayout>
@@ -85,10 +87,10 @@ export default function AdminOrderDetailPage() {
     try {
       await updateOrderStatus(order.id, newStatus);
       setOrder({ ...order, status: newStatus });
-      toast.success(`Order status updated to ${newStatus}`);
+      toast.success(t('orderStatusUpdated'));
     } catch (error) {
       console.error('Error updating order status:', error);
-      toast.error('Failed to update order status');
+      toast.error(t('orderStatusUpdateFailed'));
     } finally {
       setUpdating(false);
     }
@@ -106,7 +108,7 @@ export default function AdminOrderDetailPage() {
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
           >
             <ArrowLeft size={20} />
-            Back to Orders
+            {t('backToOrders')}
           </button>
           <div className="flex items-start justify-between">
             <div>

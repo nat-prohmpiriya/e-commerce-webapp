@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { DollarSign, ShoppingCart, Package, Users, TrendingUp, TrendingDown } from 'lucide-react';
@@ -18,6 +19,7 @@ interface Stats {
 }
 
 export default function AdminDashboard() {
+  const t = useTranslations('Admin');
   const { loading, isAdmin } = useAdminAuth();
   const { orders } = useOrder();
   const [stats, setStats] = useState<Stats>({
@@ -112,14 +114,14 @@ export default function AdminDashboard() {
   if (loading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
 
   const statCards = [
     {
-      name: 'Total Revenue',
+      name: t('totalRevenue'),
       value: `$${stats.totalRevenue.toFixed(2)}`,
       change: stats.revenueChange,
       icon: DollarSign,
@@ -127,7 +129,7 @@ export default function AdminDashboard() {
       iconColor: 'text-green-600',
     },
     {
-      name: 'Total Orders',
+      name: t('totalOrders'),
       value: stats.totalOrders.toString(),
       change: stats.ordersChange,
       icon: ShoppingCart,
@@ -135,7 +137,7 @@ export default function AdminDashboard() {
       iconColor: 'text-blue-600',
     },
     {
-      name: 'Total Products',
+      name: t('totalProducts'),
       value: stats.totalProducts.toString(),
       change: null,
       icon: Package,
@@ -143,7 +145,7 @@ export default function AdminDashboard() {
       iconColor: 'text-purple-600',
     },
     {
-      name: 'Total Users',
+      name: t('totalUsers'),
       value: stats.totalUsers.toString(),
       change: null,
       icon: Users,
@@ -166,8 +168,8 @@ export default function AdminDashboard() {
       <div className="space-y-8">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Welcome to your admin dashboard</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('dashboard')}</h1>
+          <p className="text-gray-600 mt-2">{t('welcomeToDashboard')}</p>
         </div>
 
         {/* Stats Grid */}
@@ -214,32 +216,32 @@ export default function AdminDashboard() {
         {/* Recent Orders */}
         <div className="bg-white rounded-xl shadow-sm">
           <div className="px-6 py-4 border-b">
-            <h2 className="text-xl font-bold text-gray-900">Recent Orders</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('recentOrders')}</h2>
           </div>
           <div className="overflow-x-auto">
             {recentOrders.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart size={48} className="text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">No orders yet</p>
+                <p className="text-gray-500">{t('noOrdersYet')}</p>
               </div>
             ) : (
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Order Number
+                      {t('orderNumber')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Customer
+                      {t('customer')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Total
+                      {t('total')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t('status')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
+                      {t('date')}
                     </th>
                   </tr>
                 </thead>

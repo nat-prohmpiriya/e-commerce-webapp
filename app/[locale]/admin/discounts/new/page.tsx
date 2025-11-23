@@ -1,16 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useDiscount } from '@/context/DiscountContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { ArrowLeft } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function NewDiscountPage() {
   const router = useRouter();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { createDiscount } = useDiscount();
 
@@ -30,7 +32,7 @@ export default function NewDiscountPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -39,7 +41,7 @@ export default function NewDiscountPage() {
     e.preventDefault();
 
     if (!formData.code || !formData.value || !formData.validFrom || !formData.validUntil) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -58,11 +60,11 @@ export default function NewDiscountPage() {
         isActive: formData.isActive,
       });
 
-      toast.success('Discount code created successfully!');
+      toast.success(t('discountCreatedSuccess'));
       router.push('/admin/discounts');
     } catch (error) {
       console.error('Error creating discount:', error);
-      toast.error('Failed to create discount code');
+      toast.error(t('discountCreateFailed'));
     } finally {
       setSubmitting(false);
     }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useProduct } from '@/context/ProductContext';
 import { useCategory } from '@/context/CategoryContext';
@@ -10,9 +10,11 @@ import ImageUpload from '@/components/admin/ImageUpload';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { ProductColor } from '@/types';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function NewProductPage() {
   const router = useRouter();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { createProduct } = useProduct();
   const { activeCategories, loading: categoriesLoading } = useCategory();
@@ -35,7 +37,7 @@ export default function NewProductPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -45,7 +47,7 @@ export default function NewProductPage() {
 
     // Validation
     if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.stock) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -54,7 +56,7 @@ export default function NewProductPage() {
     const validColors = colors.filter(color => color.name.trim() !== '');
 
     if (images.length === 0) {
-      toast.error('Please add at least one product image');
+      toast.error(t('addProductImage'));
       return;
     }
 
@@ -76,11 +78,11 @@ export default function NewProductPage() {
         isPublished: formData.isPublished,
       });
 
-      toast.success('Product created successfully!');
+      toast.success(t('productCreatedSuccess'));
       router.push('/admin/products');
     } catch (error) {
       console.error('Error creating product:', error);
-      toast.error('Failed to create product');
+      toast.error(t('productCreateFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -112,49 +114,49 @@ export default function NewProductPage() {
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
           >
             <ArrowLeft size={20} />
-            Back to Products
+            {t('backToProducts')}
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">Add New Product</h1>
-          <p className="text-gray-600 mt-2">Create a new product for your store</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('addNewProduct')}</h1>
+          <p className="text-gray-600 mt-2">{t('createNewProduct')}</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('basicInformation')}</h2>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product Name <span className="text-red-500">*</span>
+                {t('productName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Enter product name"
+                placeholder={t('enterProductName')}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description <span className="text-red-500">*</span>
+                {t('description')} <span className="text-red-500">*</span>
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Enter product description"
+                placeholder={t('enterProductDescription')}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category <span className="text-red-500">*</span>
+                {t('category')} <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.category}
@@ -164,7 +166,7 @@ export default function NewProductPage() {
                 disabled={categoriesLoading}
               >
                 <option value="">
-                  {categoriesLoading ? 'Loading categories...' : 'Select category'}
+                  {categoriesLoading ? t('loadingCategories') : t('selectCategory')}
                 </option>
                 {activeCategories.map((category) => (
                   <option key={category.id} value={category.slug}>
@@ -174,7 +176,7 @@ export default function NewProductPage() {
               </select>
               {activeCategories.length === 0 && !categoriesLoading && (
                 <p className="text-xs text-red-500 mt-1">
-                  No categories available. Please create one first.
+                  {t('noCategoriesAvailable')}
                 </p>
               )}
             </div>
@@ -182,12 +184,12 @@ export default function NewProductPage() {
 
           {/* Pricing & Stock */}
           <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Pricing & Stock</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('pricingStock')}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price <span className="text-red-500">*</span>
+                  {t('price')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -202,7 +204,7 @@ export default function NewProductPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Sale Price (Optional)
+                  {t('salePriceOptional')}
                 </label>
                 <input
                   type="number"
@@ -217,7 +219,7 @@ export default function NewProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stock Quantity <span className="text-red-500">*</span>
+                {t('stockQuantity')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -232,7 +234,7 @@ export default function NewProductPage() {
 
           {/* Images */}
           <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Product Images</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('productImages')}</h2>
             <ImageUpload
               images={images}
               onImagesChange={setImages}
@@ -243,14 +245,14 @@ export default function NewProductPage() {
           {/* Sizes */}
           <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Sizes</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('sizes')}</h2>
               <button
                 type="button"
                 onClick={addSizeField}
                 className="flex items-center gap-2 text-sm text-black hover:text-gray-700"
               >
                 <Plus size={16} />
-                Add Size
+                {t('addSize')}
               </button>
             </div>
 
@@ -281,14 +283,14 @@ export default function NewProductPage() {
           {/* Colors */}
           <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Colors</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('colors')}</h2>
               <button
                 type="button"
                 onClick={addColorField}
                 className="flex items-center gap-2 text-sm text-black hover:text-gray-700"
               >
                 <Plus size={16} />
-                Add Color
+                {t('addColor')}
               </button>
             </div>
 
@@ -332,8 +334,8 @@ export default function NewProductPage() {
                 className="w-5 h-5 text-black border-gray-300 rounded focus:ring-black"
               />
               <div>
-                <span className="text-sm font-medium text-gray-900">Publish product</span>
-                <p className="text-xs text-gray-500">Make this product visible to customers</p>
+                <span className="text-sm font-medium text-gray-900">{t('publishProduct')}</span>
+                <p className="text-xs text-gray-500">{t('makeProductVisible')}</p>
               </div>
             </label>
           </div>
@@ -345,14 +347,14 @@ export default function NewProductPage() {
               disabled={submitting}
               className="flex-1 bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              {submitting ? 'Creating...' : 'Create Product'}
+              {submitting ? t('creating') : t('createProduct')}
             </button>
             <button
               type="button"
               onClick={() => router.back()}
               className="px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {t('cancel')}
             </button>
           </div>
         </form>

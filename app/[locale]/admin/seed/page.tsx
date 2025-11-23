@@ -9,6 +9,7 @@ import { db } from '@/lib/firebase';
 import streetwearCategories from '@/data/streetwear/categories';
 import streetwearProducts from '@/data/streetwear/products';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 interface SeedProgress {
   total: number;
@@ -18,6 +19,7 @@ interface SeedProgress {
 }
 
 export default function SeedPage() {
+  const t = useTranslations('Admin');
   const { loading, isAdmin } = useAdminAuth();
   const [categoriesProgress, setCategoriesProgress] = useState<SeedProgress>({
     total: 0,
@@ -203,7 +205,7 @@ export default function SeedPage() {
   if (loading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }

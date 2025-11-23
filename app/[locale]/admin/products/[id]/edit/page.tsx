@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useProduct } from '@/context/ProductContext';
 import { useCategory } from '@/context/CategoryContext';
@@ -10,10 +10,12 @@ import ImageUpload from '@/components/admin/ImageUpload';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { ProductColor } from '@/types';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { getProductById, updateProduct } = useProduct();
   const { activeCategories, loading: categoriesLoading } = useCategory();
@@ -58,7 +60,7 @@ export default function EditProductPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -67,12 +69,12 @@ export default function EditProductPage() {
     return (
       <AdminLayout>
         <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">Product not found</p>
+          <p className="text-gray-500 mb-4">{t('productNotFound')}</p>
           <button
             onClick={() => router.push('/admin/products')}
             className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800"
           >
-            Back to Products
+            {t('backToProducts')}
           </button>
         </div>
       </AdminLayout>
@@ -84,7 +86,7 @@ export default function EditProductPage() {
 
     // Validation
     if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.stock) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -93,7 +95,7 @@ export default function EditProductPage() {
     const validColors = colors.filter(color => color.name.trim() !== '');
 
     if (images.length === 0) {
-      toast.error('Please add at least one product image');
+      toast.error(t('addProductImage'));
       return;
     }
 
@@ -113,11 +115,11 @@ export default function EditProductPage() {
         isPublished: formData.isPublished,
       });
 
-      toast.success('Product updated successfully!');
+      toast.success(t('productUpdatedSuccess'));
       router.push('/admin/products');
     } catch (error) {
       console.error('Error updating product:', error);
-      toast.error('Failed to update product');
+      toast.error(t('productUpdateFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -149,10 +151,10 @@ export default function EditProductPage() {
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
           >
             <ArrowLeft size={20} />
-            Back to Products
+            {t('backToProducts')}
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
-          <p className="text-gray-600 mt-2">Update product information</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('editProduct')}</h1>
+          <p className="text-gray-600 mt-2">{t('updateProductInfo')}</p>
         </div>
 
         {/* Form */}
@@ -382,14 +384,14 @@ export default function EditProductPage() {
               disabled={submitting}
               className="flex-1 bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              {submitting ? 'Updating...' : 'Update Product'}
+              {submitting ? t('updating') : t('updateProduct')}
             </button>
             <button
               type="button"
               onClick={() => router.back()}
               className="px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {t('cancel')}
             </button>
           </div>
         </form>

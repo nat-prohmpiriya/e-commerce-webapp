@@ -8,6 +8,7 @@ import { collection, getDocs, updateDoc, doc, query, orderBy } from 'firebase/fi
 import { db } from '@/lib/firebase';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface User {
   id: string;
@@ -20,6 +21,7 @@ interface User {
 }
 
 export default function AdminUsersPage() {
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ export default function AdminUsersPage() {
       setUsers(usersData);
     } catch (error) {
       console.error('Error fetching users:', error);
-      toast.error('Failed to fetch users');
+      toast.error(t('fetchUsersFailed'));
     } finally {
       setLoading(false);
     }
@@ -63,10 +65,10 @@ export default function AdminUsersPage() {
       await updateDoc(userRef, { role: newRole });
 
       setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
-      toast.success(`User role updated to ${newRole}`);
+      toast.success(t('userRoleUpdated'));
     } catch (error) {
       console.error('Error updating user role:', error);
-      toast.error('Failed to update user role');
+      toast.error(t('userRoleUpdateFailed'));
     }
   };
 
@@ -77,17 +79,17 @@ export default function AdminUsersPage() {
       await updateDoc(userRef, { isActive: newStatus });
 
       setUsers(users.map(u => u.id === userId ? { ...u, isActive: newStatus } : u));
-      toast.success(`User ${newStatus ? 'activated' : 'deactivated'}`);
+      toast.success(newStatus ? t('userActivated') : t('userDeactivated'));
     } catch (error) {
       console.error('Error updating user status:', error);
-      toast.error('Failed to update user status');
+      toast.error(t('userStatusUpdateFailed'));
     }
   };
 
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -118,8 +120,8 @@ export default function AdminUsersPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Users</h1>
-          <p className="text-gray-600 mt-2">Manage user accounts and permissions</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('users')}</h1>
+          <p className="text-gray-600 mt-2">{t('manageUsers')}</p>
         </div>
 
         {/* Stats */}
@@ -217,13 +219,13 @@ export default function AdminUsersPage() {
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-12">
-                <div className="text-gray-500">Loading users...</div>
+                <div className="text-gray-500">{t('loadingUsers')}</div>
               </div>
             ) : filteredUsers.length === 0 ? (
               <div className="text-center py-12">
                 <UserIcon size={48} className="text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 mb-2">No users found</p>
-                <p className="text-sm text-gray-400">Try adjusting your filters</p>
+                <p className="text-gray-500 mb-2">{t('noUsersFound')}</p>
+                <p className="text-sm text-gray-400">{t('tryAdjustingFilters')}</p>
               </div>
             ) : (
               <table className="w-full">

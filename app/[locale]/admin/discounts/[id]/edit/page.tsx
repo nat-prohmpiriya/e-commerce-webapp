@@ -1,17 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useDiscount } from '@/context/DiscountContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { ArrowLeft } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function EditDiscountPage() {
   const router = useRouter();
   const params = useParams();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { getDiscountById, updateDiscount } = useDiscount();
 
@@ -43,7 +45,7 @@ export default function EditDiscountPage() {
 
       if (!discount) {
         setNotFound(true);
-        toast.error('Discount code not found');
+        toast.error(t('discountNotFound'));
         return;
       }
 
@@ -74,7 +76,7 @@ export default function EditDiscountPage() {
       });
     } catch (error) {
       console.error('Error loading discount:', error);
-      toast.error('Failed to load discount data');
+      toast.error(t('discountLoadFailed'));
       setNotFound(true);
     } finally {
       setLoading(false);
@@ -138,11 +140,11 @@ export default function EditDiscountPage() {
         isActive: formData.isActive,
       });
 
-      toast.success('Discount code updated successfully!');
+      toast.success(t('discountUpdatedSuccess'));
       router.push('/admin/discounts');
     } catch (error) {
       console.error('Error updating discount:', error);
-      toast.error('Failed to update discount code');
+      toast.error(t('discountUpdateFailed'));
     } finally {
       setSubmitting(false);
     }

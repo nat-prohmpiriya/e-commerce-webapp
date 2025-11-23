@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useOrder } from '@/context/OrderContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Search, ShoppingCart, Eye, Filter } from 'lucide-react';
 import { Order, OrderStatus } from '@/types';
+import { useTranslations } from 'next-intl';
 
 const statusColors = {
   pending: 'bg-gray-100 text-gray-800',
@@ -18,6 +19,7 @@ const statusColors = {
 
 export default function AdminOrdersPage() {
   const router = useRouter();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { getAllOrders } = useOrder();
 
@@ -43,7 +45,7 @@ export default function AdminOrdersPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -75,8 +77,8 @@ export default function AdminOrdersPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Orders</h1>
-          <p className="text-gray-600 mt-2">Manage customer orders</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('orders')}</h1>
+          <p className="text-gray-600 mt-2">{t('manageOrders')}</p>
         </div>
 
         {/* Stats */}
@@ -146,15 +148,15 @@ export default function AdminOrdersPage() {
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-12">
-                <div className="text-gray-500">Loading orders...</div>
+                <div className="text-gray-500">{t('loadingOrders')}</div>
               </div>
             ) : filteredOrders.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart size={48} className="text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500">
                   {searchQuery || statusFilter !== 'all'
-                    ? 'No orders found matching your filters'
-                    : 'No orders yet'}
+                    ? t('noOrdersFound')
+                    : t('noOrdersYet')}
                 </p>
               </div>
             ) : (
@@ -223,7 +225,7 @@ export default function AdminOrdersPage() {
                           className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
                           <Eye size={16} />
-                          View
+                          {t('view')}
                         </button>
                       </td>
                     </tr>

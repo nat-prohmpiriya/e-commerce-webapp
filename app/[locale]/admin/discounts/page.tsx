@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useDiscount } from '@/context/DiscountContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Plus, Tag, Edit2, Trash2, ToggleLeft, ToggleRight, Calendar, TrendingUp, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function AdminDiscountsPage() {
   const router = useRouter();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { discounts, loading: discountsLoading, deleteDiscount, updateDiscount } = useDiscount();
   const [filter, setFilter] = useState<'all' | 'active' | 'expired'>('all');
@@ -17,32 +19,32 @@ export default function AdminDiscountsPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
 
   const handleDelete = async (id: string, code: string) => {
-    if (!confirm(`Are you sure you want to delete discount code "${code}"?`)) {
+    if (!confirm(t('confirmDeleteDiscount', { code }))) {
       return;
     }
 
     try {
       await deleteDiscount(id);
-      toast.success('Discount code deleted successfully');
+      toast.success(t('discountDeletedSuccess'));
     } catch (error) {
       console.error('Error deleting discount:', error);
-      toast.error('Failed to delete discount code');
+      toast.error(t('discountDeleteFailed'));
     }
   };
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
       await updateDiscount(id, { isActive: !currentStatus });
-      toast.success(`Discount ${!currentStatus ? 'activated' : 'deactivated'}`);
+      toast.success(!currentStatus ? t('discountActivated') : t('discountDeactivated'));
     } catch (error) {
       console.error('Error updating discount:', error);
-      toast.error('Failed to update discount status');
+      toast.error(t('discountUpdateFailed'));
     }
   };
 

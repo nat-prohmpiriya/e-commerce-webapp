@@ -6,8 +6,10 @@ import { useStoreSettings, ShippingRate } from '@/context/StoreSettingsContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Store, Truck, DollarSign, Plus, Edit2, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function AdminSettingsPage() {
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { settings, loading, updateStoreInfo, updateShippingRates, updateTaxSettings } = useStoreSettings();
   const [activeTab, setActiveTab] = useState<'store' | 'shipping' | 'tax'>('store');
@@ -84,7 +86,7 @@ export default function AdminSettingsPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -93,7 +95,7 @@ export default function AdminSettingsPage() {
     return (
       <AdminLayout>
         <div className="text-center py-12">
-          <div className="text-gray-500">Loading settings...</div>
+          <div className="text-gray-500">{t('loadingSettings')}</div>
         </div>
       </AdminLayout>
     );
@@ -120,10 +122,10 @@ export default function AdminSettingsPage() {
         timezone: storeForm.timezone,
       });
 
-      toast.success('Store information updated successfully!');
+      toast.success(t('storeInfoUpdatedSuccess'));
     } catch (error) {
       console.error('Error updating store info:', error);
-      toast.error('Failed to update store information');
+      toast.error(t('storeInfoUpdateFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -131,7 +133,7 @@ export default function AdminSettingsPage() {
 
   const handleSaveShipping = async () => {
     if (!shippingForm.name || !shippingForm.rate || !shippingForm.estimatedDays) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -174,24 +176,24 @@ export default function AdminSettingsPage() {
       setShowShippingModal(false);
       setEditingShipping(null);
       resetShippingForm();
-      toast.success(editingShipping ? 'Shipping rate updated!' : 'Shipping rate added!');
+      toast.success(editingShipping ? t('shippingRateUpdated') : t('shippingRateAdded'));
     } catch (error) {
       console.error('Error saving shipping rate:', error);
-      toast.error('Failed to save shipping rate');
+      toast.error(t('shippingRateSaveFailed'));
     }
   };
 
   const handleDeleteShipping = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this shipping rate?')) return;
+    if (!confirm(t('confirmDeleteShippingRate'))) return;
 
     try {
       const updatedRates = shippingRates.filter((rate) => rate.id !== id);
       await updateShippingRates(updatedRates);
       setShippingRates(updatedRates);
-      toast.success('Shipping rate deleted');
+      toast.success(t('shippingRateDeleted'));
     } catch (error) {
       console.error('Error deleting shipping rate:', error);
-      toast.error('Failed to delete shipping rate');
+      toast.error(t('shippingRateDeleteFailed'));
     }
   };
 
@@ -202,10 +204,10 @@ export default function AdminSettingsPage() {
       );
       await updateShippingRates(updatedRates);
       setShippingRates(updatedRates);
-      toast.success('Shipping rate updated');
+      toast.success(t('shippingRateUpdated'));
     } catch (error) {
       console.error('Error toggling shipping rate:', error);
-      toast.error('Failed to update shipping rate');
+      toast.error(t('shippingRateUpdateFailed'));
     }
   };
 
@@ -252,10 +254,10 @@ export default function AdminSettingsPage() {
         taxName: taxForm.taxName,
       });
 
-      toast.success('Tax settings updated successfully!');
+      toast.success(t('taxSettingsUpdatedSuccess'));
     } catch (error) {
       console.error('Error updating tax settings:', error);
-      toast.error('Failed to update tax settings');
+      toast.error(t('taxSettingsUpdateFailed'));
     } finally {
       setSubmitting(false);
     }

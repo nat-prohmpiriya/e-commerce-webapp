@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { ArrowLeft, Mail, Phone, Calendar, Shield, User as UserIcon, Package, ShoppingCart } from 'lucide-react';
@@ -10,6 +10,7 @@ import { db } from '@/lib/firebase';
 import { Order } from '@/types';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 interface UserDetail {
   id: string;
@@ -25,6 +26,7 @@ interface UserDetail {
 export default function UserDetailPage() {
   const router = useRouter();
   const params = useParams();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const [user, setUser] = useState<UserDetail | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -49,11 +51,11 @@ export default function UserDetailPage() {
           ...userSnap.data(),
         } as UserDetail);
       } else {
-        toast.error('User not found');
+        toast.error(t('userNotFound'));
       }
     } catch (error) {
       console.error('Error fetching user:', error);
-      toast.error('Failed to fetch user data');
+      toast.error(t('fetchUserFailed'));
     } finally {
       setLoading(false);
     }

@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useCategory } from '@/context/CategoryContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Plus, Edit2, Trash2, Tag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 export default function AdminCategoriesPage() {
   const router = useRouter();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { categories, loading: categoriesLoading, createCategory, updateCategory, deleteCategory } = useCategory();
 
@@ -26,7 +28,7 @@ export default function AdminCategoriesPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -82,7 +84,7 @@ export default function AdminCategoriesPage() {
     e.preventDefault();
 
     if (!formData.name || !formData.slug) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillRequiredFields'));
       return;
     }
 
@@ -96,7 +98,7 @@ export default function AdminCategoriesPage() {
           description: formData.description,
           isActive: formData.isActive,
         });
-        toast.success('Category updated successfully!');
+        toast.success(t('categoryUpdatedSuccess'));
       } else {
         await createCategory({
           name: formData.name,
@@ -104,28 +106,28 @@ export default function AdminCategoriesPage() {
           description: formData.description,
           isActive: formData.isActive,
         });
-        toast.success('Category created successfully!');
+        toast.success(t('categoryCreatedSuccess'));
       }
       handleCloseModal();
     } catch (error) {
       console.error('Error saving category:', error);
-      toast.error('Failed to save category');
+      toast.error(t('categorySaveFailed'));
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+    if (!confirm(t('confirmDeleteCategory', { name }))) {
       return;
     }
 
     try {
       await deleteCategory(id);
-      toast.success('Category deleted successfully');
+      toast.success(t('categoryDeletedSuccess'));
     } catch (error) {
       console.error('Error deleting category:', error);
-      toast.error('Failed to delete category');
+      toast.error(t('categoryDeleteFailed'));
     }
   };
 

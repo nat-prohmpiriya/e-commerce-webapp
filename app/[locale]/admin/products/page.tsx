@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useProduct } from '@/context/ProductContext';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -11,6 +12,7 @@ import toast from 'react-hot-toast';
 
 export default function AdminProductsPage() {
   const router = useRouter();
+  const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { products, loading: productsLoading, deleteProduct } = useProduct();
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,7 +21,7 @@ export default function AdminProductsPage() {
   if (authLoading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -36,16 +38,16 @@ export default function AdminProductsPage() {
   const categories = ['all', ...Array.from(new Set(products.map(p => p.category)))];
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+    if (!confirm(t('confirmDeleteProduct', { name }))) {
       return;
     }
 
     try {
       await deleteProduct(id);
-      toast.success('Product deleted successfully');
+      toast.success(t('productDeletedSuccess'));
     } catch (error) {
       console.error('Error deleting product:', error);
-      toast.error('Failed to delete product');
+      toast.error(t('productDeletedError'));
     }
   };
 
@@ -55,15 +57,15 @@ export default function AdminProductsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-            <p className="text-gray-600 mt-2">Manage your product catalog</p>
+            <h1 className="text-3xl font-bold text-gray-900">{t('products')}</h1>
+            <p className="text-gray-600 mt-2">{t('manageProductCatalog')}</p>
           </div>
           <button
             onClick={() => router.push('/admin/products/new')}
             className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             <Plus size={20} />
-            Add Product
+            {t('addProduct')}
           </button>
         </div>
 
@@ -75,7 +77,7 @@ export default function AdminProductsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('searchProducts')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
@@ -90,7 +92,7 @@ export default function AdminProductsPage() {
             >
               {categories.map((category) => (
                 <option key={category} value={category}>
-                  {category === 'all' ? 'All Categories' : category}
+                  {category === 'all' ? t('allCategories') : category}
                 </option>
               ))}
             </select>
@@ -100,17 +102,17 @@ export default function AdminProductsPage() {
         {/* Products Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-xl shadow-sm p-4">
-            <p className="text-sm text-gray-600">Total Products</p>
+            <p className="text-sm text-gray-600">{t('totalProducts')}</p>
             <p className="text-2xl font-bold text-gray-900 mt-1">{products.length}</p>
           </div>
           <div className="bg-white rounded-xl shadow-sm p-4">
-            <p className="text-sm text-gray-600">Published</p>
+            <p className="text-sm text-gray-600">{t('published')}</p>
             <p className="text-2xl font-bold text-green-600 mt-1">
               {products.filter(p => p.isPublished).length}
             </p>
           </div>
           <div className="bg-white rounded-xl shadow-sm p-4">
-            <p className="text-sm text-gray-600">Draft</p>
+            <p className="text-sm text-gray-600">{t('draft')}</p>
             <p className="text-2xl font-bold text-gray-600 mt-1">
               {products.filter(p => !p.isPublished).length}
             </p>
@@ -122,22 +124,22 @@ export default function AdminProductsPage() {
           <div className="overflow-x-auto">
             {productsLoading ? (
               <div className="text-center py-12">
-                <div className="text-gray-500">Loading products...</div>
+                <div className="text-gray-500">{t('loadingProducts')}</div>
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="text-center py-12">
                 <Package size={48} className="text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 mb-2">
                   {searchQuery || categoryFilter !== 'all'
-                    ? 'No products found matching your filters'
-                    : 'No products yet'}
+                    ? t('noProductsMatchFilters')
+                    : t('noProductsYet')}
                 </p>
                 {products.length === 0 && (
                   <button
                     onClick={() => router.push('/admin/products/new')}
                     className="mt-4 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
                   >
-                    Add Your First Product
+                    {t('addYourFirstProduct')}
                   </button>
                 )}
               </div>
@@ -146,22 +148,22 @@ export default function AdminProductsPage() {
                 <thead className="bg-gray-50 border-b">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Product
+                      {t('product')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Category
+                      {t('category')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Price
+                      {t('price')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Stock
+                      {t('stock')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t('status')}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      {t('actions')}
                     </th>
                   </tr>
                 </thead>
@@ -220,7 +222,7 @@ export default function AdminProductsPage() {
                             ? 'bg-green-100 text-green-800'
                             : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {product.isPublished ? 'Published' : 'Draft'}
+                          {product.isPublished ? t('published') : t('draft')}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -228,21 +230,21 @@ export default function AdminProductsPage() {
                           <button
                             onClick={() => router.push(`/products/${product.id}`)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="View"
+                            title={t('view')}
                           >
                             <Eye size={18} />
                           </button>
                           <button
                             onClick={() => router.push(`/admin/products/${product.id}/edit`)}
                             className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                            title="Edit"
+                            title={t('edit')}
                           >
                             <Edit2 size={18} />
                           </button>
                           <button
                             onClick={() => handleDelete(product.id, product.name)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Delete"
+                            title={t('delete')}
                           >
                             <Trash2 size={18} />
                           </button>
