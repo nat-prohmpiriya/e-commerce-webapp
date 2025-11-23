@@ -6,6 +6,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { AddressProvider } from '@/context/AddressContext';
+import { OrderProvider } from '@/context/OrderContext';
+import { SettingsProvider } from '@/context/SettingsContext';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
@@ -30,34 +32,38 @@ export default function RootLayout({
 					<CartProvider>
 						<WishlistProvider>
 							<AddressProvider>
-								<LayoutApp>
-									{children}
-								</LayoutApp>
-								<Toaster
-									position="top-center"
-									reverseOrder={false}
-									toastOptions={{
-										duration: 3000,
-										style: {
-											background: '#363636',
-											color: '#fff',
-											borderRadius: '12px',
-											padding: '12px 20px',
-										},
-										success: {
-											iconTheme: {
-												primary: '#10b981',
-												secondary: '#fff',
-											},
-										},
-										error: {
-											iconTheme: {
-												primary: '#ef4444',
-												secondary: '#fff',
-											},
-										},
-									}}
-								/>
+								<OrderProvider>
+									<SettingsProvider>
+										<LayoutApp>
+											{children}
+										</LayoutApp>
+										<Toaster
+											position="top-center"
+											reverseOrder={false}
+											toastOptions={{
+												duration: 3000,
+												style: {
+													background: '#363636',
+													color: '#fff',
+													borderRadius: '12px',
+													padding: '12px 20px',
+												},
+												success: {
+													iconTheme: {
+														primary: '#10b981',
+														secondary: '#fff',
+													},
+												},
+												error: {
+													iconTheme: {
+														primary: '#ef4444',
+														secondary: '#fff',
+													},
+												},
+											}}
+										/>
+									</SettingsProvider>
+								</OrderProvider>
 							</AddressProvider>
 						</WishlistProvider>
 					</CartProvider>

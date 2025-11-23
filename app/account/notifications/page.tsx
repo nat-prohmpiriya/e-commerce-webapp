@@ -1,91 +1,91 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
+import { useSettings } from '@/context/SettingsContext';
 import toast from 'react-hot-toast';
-
-interface NotificationSetting {
-  id: string;
-  title: string;
-  description: string;
-  enabled: boolean;
-}
 
 export default function NotificationsPage() {
   const router = useRouter();
+  const { settings, loading, updateNotificationSettings } = useSettings();
 
-  const [emailNotifications, setEmailNotifications] = useState<NotificationSetting[]>([
+  const handleEmailToggle = async (key: 'orderUpdates' | 'promotions' | 'newsletter') => {
+    try {
+      await updateNotificationSettings({
+        email: {
+          ...settings.notifications.email,
+          [key]: !settings.notifications.email[key],
+        },
+      });
+      toast.success('Email notification preference updated');
+    } catch (error) {
+      toast.error('Failed to update preference');
+    }
+  };
+
+  const handlePushToggle = async (key: 'orderUpdates' | 'promotions' | 'newArrivals') => {
+    try {
+      await updateNotificationSettings({
+        push: {
+          ...settings.notifications.push,
+          [key]: !settings.notifications.push[key],
+        },
+      });
+      toast.success('Push notification preference updated');
+    } catch (error) {
+      toast.error('Failed to update preference');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-500">Loading settings...</div>
+      </div>
+    );
+  }
+
+  const emailNotifications = [
     {
-      id: 'order_updates',
+      key: 'orderUpdates' as const,
       title: 'Order Updates',
       description: 'Get notified about order status changes',
-      enabled: true,
+      enabled: settings.notifications.email.orderUpdates,
     },
     {
-      id: 'promotions',
+      key: 'promotions' as const,
       title: 'Promotions & Offers',
       description: 'Receive exclusive deals and discounts',
-      enabled: true,
+      enabled: settings.notifications.email.promotions,
     },
     {
-      id: 'new_arrivals',
+      key: 'newsletter' as const,
+      title: 'Newsletter',
+      description: 'Weekly updates and fashion tips',
+      enabled: settings.notifications.email.newsletter,
+    },
+  ];
+
+  const pushNotifications = [
+    {
+      key: 'orderUpdates' as const,
+      title: 'Order Updates',
+      description: 'Get notified about order status changes',
+      enabled: settings.notifications.push.orderUpdates,
+    },
+    {
+      key: 'promotions' as const,
+      title: 'Promotions & Offers',
+      description: 'Receive exclusive deals and discounts',
+      enabled: settings.notifications.push.promotions,
+    },
+    {
+      key: 'newArrivals' as const,
       title: 'New Arrivals',
       description: 'Be the first to know about new products',
-      enabled: false,
+      enabled: settings.notifications.push.newArrivals,
     },
-    {
-      id: 'newsletters',
-      title: 'Newsletters',
-      description: 'Weekly updates and fashion tips',
-      enabled: false,
-    },
-  ]);
-
-  const [pushNotifications, setPushNotifications] = useState<NotificationSetting[]>([
-    {
-      id: 'order_shipped',
-      title: 'Order Shipped',
-      description: 'When your order is on the way',
-      enabled: true,
-    },
-    {
-      id: 'order_delivered',
-      title: 'Order Delivered',
-      description: 'When your order arrives',
-      enabled: true,
-    },
-    {
-      id: 'price_drops',
-      title: 'Price Drops',
-      description: 'When items in your wishlist go on sale',
-      enabled: false,
-    },
-    {
-      id: 'back_in_stock',
-      title: 'Back in Stock',
-      description: 'When out-of-stock items become available',
-      enabled: false,
-    },
-  ]);
-
-  const handleEmailToggle = (id: string) => {
-    setEmailNotifications(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, enabled: !item.enabled } : item
-      )
-    );
-    toast.success('Email notification preference updated');
-  };
-
-  const handlePushToggle = (id: string) => {
-    setPushNotifications(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, enabled: !item.enabled } : item
-      )
-    );
-    toast.success('Push notification preference updated');
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
@@ -113,7 +113,7 @@ export default function NotificationsPage() {
           <div className="space-y-3">
             {emailNotifications.map((notification) => (
               <div
-                key={notification.id}
+                key={notification.key}
                 className="bg-white rounded-2xl p-4 flex items-center justify-between"
               >
                 <div className="flex-1 pr-4">
@@ -125,7 +125,7 @@ export default function NotificationsPage() {
                   </p>
                 </div>
                 <button
-                  onClick={() => handleEmailToggle(notification.id)}
+                  onClick={() => handleEmailToggle(notification.key)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                     notification.enabled ? 'bg-black' : 'bg-gray-300'
                   }`}
@@ -150,7 +150,7 @@ export default function NotificationsPage() {
           <div className="space-y-3">
             {pushNotifications.map((notification) => (
               <div
-                key={notification.id}
+                key={notification.key}
                 className="bg-white rounded-2xl p-4 flex items-center justify-between"
               >
                 <div className="flex-1 pr-4">
@@ -162,7 +162,7 @@ export default function NotificationsPage() {
                   </p>
                 </div>
                 <button
-                  onClick={() => handlePushToggle(notification.id)}
+                  onClick={() => handlePushToggle(notification.key)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                     notification.enabled ? 'bg-black' : 'bg-gray-300'
                   }`}

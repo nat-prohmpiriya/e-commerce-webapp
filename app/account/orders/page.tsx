@@ -1,68 +1,34 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Package, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { useOrder } from '@/context/OrderContext';
+import { ArrowLeft, Package, Clock, CheckCircle, XCircle, Truck } from 'lucide-react';
 import Image from 'next/image';
 
-// Mock data - ในอนาคตจะดึงจาก Firestore
-const mockOrders = [
-  {
-    id: 'ORD-2024-001',
-    date: '2024-01-15',
-    status: 'delivered',
-    total: 299.99,
-    items: [
-      {
-        id: '1',
-        name: 'Classic White Sneakers',
-        image: '/placeholder-product.svg',
-        size: 'US 9',
-        color: 'White',
-        quantity: 1,
-        price: 149.99,
-      },
-      {
-        id: '2',
-        name: 'Denim Jacket',
-        image: '/placeholder-product.svg',
-        size: 'M',
-        color: 'Blue',
-        quantity: 1,
-        price: 150.00,
-      },
-    ],
-  },
-  {
-    id: 'ORD-2024-002',
-    date: '2024-01-10',
-    status: 'processing',
-    total: 189.99,
-    items: [
-      {
-        id: '3',
-        name: 'Cotton T-Shirt',
-        image: '/placeholder-product.svg',
-        size: 'L',
-        color: 'Black',
-        quantity: 2,
-        price: 89.99,
-      },
-    ],
-  },
-];
-
 const statusConfig = {
-  delivered: {
-    label: 'Delivered',
-    icon: CheckCircle,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
+  pending: {
+    label: 'Pending',
+    icon: Clock,
+    color: 'text-gray-600',
+    bgColor: 'bg-gray-50',
   },
   processing: {
     label: 'Processing',
     icon: Clock,
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50',
+  },
+  shipped: {
+    label: 'Shipped',
+    icon: Truck,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50',
+  },
+  delivered: {
+    label: 'Delivered',
+    icon: CheckCircle,
+    color: 'text-green-600',
+    bgColor: 'bg-green-50',
   },
   cancelled: {
     label: 'Cancelled',
@@ -74,6 +40,15 @@ const statusConfig = {
 
 export default function OrdersPage() {
   const router = useRouter();
+  const { orders, loading } = useOrder();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-500">Loading orders...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
@@ -92,7 +67,7 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       <div className="px-4 py-6 space-y-4">
-        {mockOrders.length === 0 ? (
+        {orders.length === 0 ? (
           <div className="text-center py-12">
             <Package size={64} className="text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -109,8 +84,8 @@ export default function OrdersPage() {
             </button>
           </div>
         ) : (
-          mockOrders.map((order) => {
-            const status = statusConfig[order.status as keyof typeof statusConfig];
+          orders.map((order) => {
+            const status = statusConfig[order.status];
             const StatusIcon = status.icon;
 
             return (
@@ -118,13 +93,19 @@ export default function OrdersPage() {
                 {/* Order Header */}
                 <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-1">{order.id}</h3>
+                    <h3 className="font-bold text-gray-900 mb-1">{order.orderNumber}</h3>
                     <p className="text-sm text-gray-500">
-                      {new Date(order.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
+                      {order.createdAt instanceof Date
+                        ? order.createdAt.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })
+                        : new Date(order.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
                     </p>
                   </div>
                   <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${status.bgColor}`}>
@@ -137,13 +118,13 @@ export default function OrdersPage() {
 
                 {/* Order Items */}
                 <div className="space-y-3 mb-4">
-                  {order.items.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
+                  {order.items.map((item, index) => (
+                    <div key={`${item.productId}-${index}`} className="flex items-center gap-3">
                       {/* Item Image */}
                       <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                         <Image
-                          src={item.image}
-                          alt={item.name}
+                          src={item.productImage}
+                          alt={item.productName}
                           fill
                           className="object-cover"
                         />
@@ -152,7 +133,7 @@ export default function OrdersPage() {
                       {/* Item Info */}
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-900 text-sm mb-1">
-                          {item.name}
+                          {item.productName}
                         </h4>
                         <p className="text-xs text-gray-500">
                           {item.size} • {item.color} • Qty: {item.quantity}
@@ -162,7 +143,7 @@ export default function OrdersPage() {
                       {/* Item Price */}
                       <div className="text-right">
                         <span className="font-semibold text-gray-900">
-                          ${item.price.toFixed(2)}
+                          ${item.subtotal.toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -179,7 +160,10 @@ export default function OrdersPage() {
 
                 {/* Action Buttons */}
                 <div className="flex gap-2 mt-4">
-                  <button className="flex-1 bg-black text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
+                  <button
+                    onClick={() => router.push(`/account/orders/${order.id}`)}
+                    className="flex-1 bg-black text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+                  >
                     View Details
                   </button>
                   {order.status === 'delivered' && (

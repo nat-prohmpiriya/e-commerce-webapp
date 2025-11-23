@@ -1,16 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronDown, Menu, MapPin, Plus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAddress } from '@/context/AddressContext';
+import { useOrder } from '@/context/OrderContext';
+import { OrderItem } from '@/types';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, getCartTotal, getCartItemCount } = useCart();
+  const { cart, getCartTotal, getCartItemCount, clearCart } = useCart();
   const { addresses, getSelectedAddress, selectAddress } = useAddress();
+  const { createOrder } = useOrder();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const selectedAddress = getSelectedAddress();
   const subtotal = getCartTotal();
@@ -19,13 +24,68 @@ export default function CheckoutPage() {
   const total = subtotal + shippingFee - discount;
   const totalItems = getCartItemCount();
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!selectedAddress) {
       toast.error('Please select a shipping address');
       return;
     }
-    // TODO: Implement payment processing
-    toast.success('Payment processing will be implemented with Stripe');
+
+    if (isProcessing) return;
+
+    setIsProcessing(true);
+
+    try {
+      // Convert cart items to order items
+      const orderItems: OrderItem[] = cart.map(item => ({
+        productId: item.productId,
+        productName: item.productName,
+        productImage: item.productImage,
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color,
+        price: item.price,
+        salePrice: item.salePrice,
+        subtotal: (item.salePrice || item.price) * item.quantity,
+      }));
+
+      // Create order
+      const order = await createOrder({
+        items: orderItems,
+        subtotal,
+        shipping: shippingFee,
+        discount,
+        total,
+        shippingAddress: {
+          fullName: selectedAddress.fullName,
+          phoneNumber: selectedAddress.phoneNumber,
+          addressLine1: selectedAddress.addressLine1,
+          addressLine2: selectedAddress.addressLine2,
+          city: selectedAddress.city,
+          state: selectedAddress.state,
+          postalCode: selectedAddress.postalCode,
+          country: selectedAddress.country,
+        },
+        paymentMethod: {
+          type: 'card',
+          cardBrand: 'visa',
+          last4: '2143',
+        },
+      });
+
+      // Clear cart
+      clearCart();
+
+      // Show success message
+      toast.success(`Order ${order.orderNumber} placed successfully!`);
+
+      // Redirect to order confirmation or orders page
+      router.push('/account/orders');
+    } catch (error) {
+      console.error('Error creating order:', error);
+      toast.error('Failed to place order. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleAddressClick = () => {
@@ -188,9 +248,10 @@ export default function CheckoutPage() {
       <div className="fixed bottom-0 left-0 right-0 w-[432px] mx-auto bg-white border-t border-gray-200 px-4 py-4 shadow-lg z-20">
         <button
           onClick={handlePayment}
-          className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors"
+          disabled={isProcessing}
+          className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          Pay
+          {isProcessing ? 'Processing...' : 'Pay'}
         </button>
       </div>
     </div>
