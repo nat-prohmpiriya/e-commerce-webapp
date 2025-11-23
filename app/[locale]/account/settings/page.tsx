@@ -1,20 +1,22 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { useSettings } from '@/context/SettingsContext';
+import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
+  const t = useTranslations('Account');
   const router = useRouter();
   const { settings, loading, updateAppSettings } = useSettings();
 
   const handleToggleAppearance = async (value: 'light' | 'dark' | 'system') => {
     try {
       await updateAppSettings({ appearance: value });
-      toast.success('Appearance updated');
+      toast.success(t('appearanceUpdated'));
     } catch (error) {
-      toast.error('Failed to update appearance');
+      toast.error(t('appearanceUpdateFailed'));
     }
   };
 
@@ -26,9 +28,9 @@ export default function SettingsPage() {
           [key]: !settings.app.privacy[key],
         },
       });
-      toast.success('Privacy setting updated');
+      toast.success(t('privacyUpdated'));
     } catch (error) {
-      toast.error('Failed to update privacy setting');
+      toast.error(t('privacyUpdateFailed'));
     }
   };
 
@@ -40,9 +42,9 @@ export default function SettingsPage() {
           [key]: !settings.app.media[key],
         },
       });
-      toast.success('Media setting updated');
+      toast.success(t('mediaUpdated'));
     } catch (error) {
-      toast.error('Failed to update media setting');
+      toast.error(t('mediaUpdateFailed'));
     }
   };
 
@@ -67,28 +69,28 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">Loading settings...</div>
+        <div className="text-gray-500">{t('loadingSettings')}</div>
       </div>
     );
   }
 
   const appearanceOptions = [
-    { value: 'light' as const, label: 'Light' },
-    { value: 'dark' as const, label: 'Dark' },
-    { value: 'system' as const, label: 'System' },
+    { value: 'light' as const, label: t('light') },
+    { value: 'dark' as const, label: t('dark') },
+    { value: 'system' as const, label: t('system') },
   ];
 
   const privacySettings = [
     {
       key: 'shareData' as const,
-      label: 'Share Usage Data',
-      description: 'Help us improve by sharing anonymous usage data',
+      label: t('shareUsageData'),
+      description: t('shareUsageDataDesc'),
       enabled: settings.app.privacy.shareData,
     },
     {
       key: 'personalizedAds' as const,
-      label: 'Personalized Ads',
-      description: 'Show ads based on your preferences',
+      label: t('personalizedAds'),
+      description: t('personalizedAdsDesc'),
       enabled: settings.app.privacy.personalizedAds,
     },
   ];
@@ -96,14 +98,14 @@ export default function SettingsPage() {
   const mediaSettings = [
     {
       key: 'autoPlayVideos' as const,
-      label: 'Auto-play Videos',
-      description: 'Automatically play product videos',
+      label: t('autoPlayVideos'),
+      description: t('autoPlayVideosDesc'),
       enabled: settings.app.media.autoPlayVideos,
     },
     {
       key: 'downloadOverWifi' as const,
-      label: 'Download Over Wi-Fi Only',
-      description: 'Save mobile data by downloading only on Wi-Fi',
+      label: t('downloadOverWifi'),
+      description: t('downloadOverWifiDesc'),
       enabled: settings.app.media.downloadOverWifi,
     },
   ];
@@ -119,7 +121,7 @@ export default function SettingsPage() {
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('settings')}</h1>
         </div>
       </div>
 
@@ -127,9 +129,9 @@ export default function SettingsPage() {
       <div className="px-4 py-6 space-y-6">
         {/* Appearance */}
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Appearance</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-1">{t('appearance')}</h2>
           <p className="text-sm text-gray-500 mb-4">
-            Choose how the app looks on your device
+            {t('chooseAppearance')}
           </p>
           <div className="bg-white rounded-2xl p-4">
             <div className="flex gap-2">
@@ -152,9 +154,9 @@ export default function SettingsPage() {
 
         {/* Privacy */}
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Privacy</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-1">{t('privacy')}</h2>
           <p className="text-sm text-gray-500 mb-4">
-            Manage your privacy preferences
+            {t('managePrivacy')}
           </p>
           <div className="space-y-3">
             {privacySettings.map((item) => (
@@ -189,9 +191,9 @@ export default function SettingsPage() {
 
         {/* Media */}
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Media</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-1">{t('media')}</h2>
           <p className="text-sm text-gray-500 mb-4">
-            Control how media is displayed and downloaded
+            {t('controlMedia')}
           </p>
           <div className="space-y-3">
             {mediaSettings.map((item) => (
@@ -226,7 +228,7 @@ export default function SettingsPage() {
 
         {/* General Settings */}
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-4">General</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">{t('general')}</h2>
           <div className="space-y-3">
             <button
               onClick={() => toast('Language selection menu', { icon: 'ℹ️' })}
@@ -234,7 +236,7 @@ export default function SettingsPage() {
             >
               <div className="text-left">
                 <h3 className="font-semibold text-gray-900 mb-1">
-                  Language
+                  {t('language')}
                 </h3>
                 <p className="text-sm text-gray-500">
                   {settings.app.language === 'en' ? 'English (US)' : settings.app.language}
@@ -248,7 +250,7 @@ export default function SettingsPage() {
             >
               <div className="text-left">
                 <h3 className="font-semibold text-gray-900 mb-1">
-                  Currency
+                  {t('currency')}
                 </h3>
                 <p className="text-sm text-gray-500">
                   {settings.app.currency} ({settings.app.currency === 'USD' ? '$' : settings.app.currency})
@@ -259,16 +261,16 @@ export default function SettingsPage() {
             <button
               onClick={() => {
                 localStorage.clear();
-                toast.success('Cache cleared successfully');
+                toast.success(t('cacheCleared'));
               }}
               className="w-full bg-white rounded-2xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <div className="text-left">
                 <h3 className="font-semibold text-gray-900 mb-1">
-                  Clear Cache
+                  {t('clearCache')}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  Free up storage space
+                  {t('freeUpStorage')}
                 </p>
               </div>
               <ChevronRight size={20} className="text-gray-400" />
@@ -278,14 +280,14 @@ export default function SettingsPage() {
 
         {/* Legal */}
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Legal</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">{t('legal')}</h2>
           <div className="space-y-3">
             <button
               onClick={() => toast('Terms of Service page', { icon: 'ℹ️' })}
               className="w-full bg-white rounded-2xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <h3 className="font-semibold text-gray-900">
-                Terms of Service
+                {t('termsOfService')}
               </h3>
               <ChevronRight size={20} className="text-gray-400" />
             </button>
@@ -294,7 +296,7 @@ export default function SettingsPage() {
               className="w-full bg-white rounded-2xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <h3 className="font-semibold text-gray-900">
-                Privacy Policy
+                {t('privacyPolicy')}
               </h3>
               <ChevronRight size={20} className="text-gray-400" />
             </button>
@@ -303,7 +305,7 @@ export default function SettingsPage() {
               className="w-full bg-white rounded-2xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <h3 className="font-semibold text-gray-900">
-                About
+                {t('about')}
               </h3>
               <ChevronRight size={20} className="text-gray-400" />
             </button>
@@ -312,8 +314,8 @@ export default function SettingsPage() {
 
         {/* App Version */}
         <div className="text-center py-4">
-          <p className="text-sm text-gray-400">Version 1.0.0</p>
-          <p className="text-xs text-gray-400 mt-1">© 2024 E-Commerce Store</p>
+          <p className="text-sm text-gray-400">{t('version')}</p>
+          <p className="text-xs text-gray-400 mt-1">{t('copyright')}</p>
         </div>
       </div>
     </div>

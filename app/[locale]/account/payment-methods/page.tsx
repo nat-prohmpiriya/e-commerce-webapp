@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import { ArrowLeft, CreditCard, Plus, Check, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -43,6 +44,7 @@ const cardBrandConfig = {
 };
 
 export default function PaymentMethodsPage() {
+  const t = useTranslations('Account');
   const router = useRouter();
   const [paymentMethods, setPaymentMethods] = useState(mockPaymentMethods);
 
@@ -53,18 +55,18 @@ export default function PaymentMethodsPage() {
         isDefault: method.id === id,
       }))
     );
-    toast.success('Default payment method updated');
+    toast.success(t('defaultPaymentUpdated'));
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to remove this payment method?')) {
+    if (confirm(t('removePaymentConfirm'))) {
       setPaymentMethods(prev => prev.filter(method => method.id !== id));
-      toast.success('Payment method removed');
+      toast.success(t('paymentRemovedSuccess'));
     }
   };
 
   const handleAddNew = () => {
-    toast('Payment method integration will be implemented with Stripe', {
+    toast(t('paymentIntegrationInfo'), {
       icon: 'ℹ️',
       duration: 4000,
     });
@@ -81,7 +83,7 @@ export default function PaymentMethodsPage() {
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold text-gray-900 flex-1">Payment Methods</h1>
+          <h1 className="text-2xl font-bold text-gray-900 flex-1">{t('paymentMethods')}</h1>
         </div>
 
         {/* Add New Payment Method Button */}
@@ -90,7 +92,7 @@ export default function PaymentMethodsPage() {
           className="w-full bg-black text-white py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors"
         >
           <Plus size={20} />
-          <span className="font-semibold">Add Payment Method</span>
+          <span className="font-semibold">{t('addPaymentMethod')}</span>
         </button>
       </div>
 
@@ -100,10 +102,10 @@ export default function PaymentMethodsPage() {
           <div className="text-center py-12">
             <CreditCard size={64} className="text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              No payment methods
+              {t('noPaymentMethods')}
             </h2>
             <p className="text-gray-500 mb-6">
-              Add a payment method for faster checkout
+              {t('addPaymentCheckout')}
             </p>
           </div>
         ) : (
@@ -121,7 +123,7 @@ export default function PaymentMethodsPage() {
                 {method.isDefault && (
                   <div className="absolute top-4 right-4">
                     <span className="bg-black text-white text-xs px-3 py-1 rounded-full font-medium">
-                      Default
+                      {t('default')}
                     </span>
                   </div>
                 )}
@@ -142,7 +144,7 @@ export default function PaymentMethodsPage() {
                       {method.holderName}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Expires {method.expiryMonth}/{method.expiryYear}
+                      {t('expires')} {method.expiryMonth}/{method.expiryYear}
                     </p>
                   </div>
                 </div>
@@ -155,7 +157,7 @@ export default function PaymentMethodsPage() {
                       className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                     >
                       <Check size={16} />
-                      Set as Default
+                      {t('setAsDefault')}
                     </button>
                   )}
                   <button
@@ -163,7 +165,7 @@ export default function PaymentMethodsPage() {
                     className="flex-1 bg-red-50 text-red-600 py-2 rounded-full text-sm font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
                   >
                     <Trash2 size={16} />
-                    Remove
+                    {t('remove')}
                   </button>
                 </div>
               </div>
@@ -176,9 +178,9 @@ export default function PaymentMethodsPage() {
       <div className="px-4 py-4">
         <div className="bg-blue-50 rounded-xl p-4">
           <p className="text-sm text-blue-900">
-            <span className="font-semibold">🔒 Secure Payment</span>
+            <span className="font-semibold">{t('securePayment')}</span>
             <br />
-            Your payment information is encrypted and secure. We never store your full card details.
+            {t('securePaymentDesc')}
           </p>
         </div>
       </div>

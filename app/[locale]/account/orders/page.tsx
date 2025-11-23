@@ -1,37 +1,33 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 import { useOrder } from '@/context/OrderContext';
 import { ArrowLeft, Package, Clock, CheckCircle, XCircle, Truck } from 'lucide-react';
 import Image from 'next/image';
 
 const statusConfig = {
   pending: {
-    label: 'Pending',
     icon: Clock,
     color: 'text-gray-600',
     bgColor: 'bg-gray-50',
   },
   processing: {
-    label: 'Processing',
     icon: Clock,
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50',
   },
   shipped: {
-    label: 'Shipped',
     icon: Truck,
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
   },
   delivered: {
-    label: 'Delivered',
     icon: CheckCircle,
     color: 'text-green-600',
     bgColor: 'bg-green-50',
   },
   cancelled: {
-    label: 'Cancelled',
     icon: XCircle,
     color: 'text-red-600',
     bgColor: 'bg-red-50',
@@ -39,13 +35,14 @@ const statusConfig = {
 };
 
 export default function OrdersPage() {
+  const t = useTranslations('Account');
   const router = useRouter();
   const { orders, loading } = useOrder();
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">Loading orders...</div>
+        <div className="text-gray-500">{t('loadingOrders')}</div>
       </div>
     );
   }
@@ -61,7 +58,7 @@ export default function OrdersPage() {
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">My Orders</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('myOrders')}</h1>
         </div>
       </div>
 
@@ -71,16 +68,16 @@ export default function OrdersPage() {
           <div className="text-center py-12">
             <Package size={64} className="text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              No orders yet
+              {t('noOrdersYet')}
             </h2>
             <p className="text-gray-500 mb-6">
-              Start shopping to see your orders here
+              {t('startShoppingOrders')}
             </p>
             <button
               onClick={() => router.push('/')}
               className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
             >
-              Start Shopping
+              {t('startShopping')}
             </button>
           </div>
         ) : (
@@ -117,7 +114,7 @@ export default function OrdersPage() {
                   <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${status.bgColor}`}>
                     <StatusIcon size={16} className={status.color} />
                     <span className={`text-sm font-medium ${status.color}`}>
-                      {status.label}
+                      {t(order.status)}
                     </span>
                   </div>
                 </div>
@@ -158,7 +155,7 @@ export default function OrdersPage() {
 
                 {/* Order Total */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <span className="font-semibold text-gray-900">Total</span>
+                  <span className="font-semibold text-gray-900">{t('total')}</span>
                   <span className="font-bold text-xl text-gray-900">
                     ${order.total.toFixed(2)}
                   </span>
@@ -170,11 +167,11 @@ export default function OrdersPage() {
                     onClick={() => router.push(`/account/orders/${order.id}`)}
                     className="flex-1 bg-black text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
                   >
-                    View Details
+                    {t('viewDetails')}
                   </button>
                   {order.status === 'delivered' && (
                     <button className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
-                      Buy Again
+                      {t('buyAgain')}
                     </button>
                   )}
                 </div>

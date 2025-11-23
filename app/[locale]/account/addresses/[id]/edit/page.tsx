@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAddress } from '@/context/AddressContext';
+import { useTranslations } from 'next-intl';
 import { ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function EditAddressPage() {
+  const t = useTranslations('Account');
   const router = useRouter();
   const params = useParams();
   const addressId = params.id as string;
@@ -59,18 +62,18 @@ export default function EditAddressPage() {
     // Validation
     if (!formData.fullName || !formData.phoneNumber || !formData.addressLine1 ||
         !formData.city || !formData.state || !formData.postalCode || !formData.country) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('fillAllRequired'));
       return;
     }
 
     setLoading(true);
     try {
       await updateAddress(addressId, formData);
-      toast.success('Address updated successfully');
+      toast.success(t('addressUpdatedSuccess'));
       router.back();
     } catch (error) {
       console.error('Error updating address:', error);
-      toast.error('Failed to update address. Please try again.');
+      toast.error(t('addressUpdateFailed'));
     } finally {
       setLoading(false);
     }
@@ -103,7 +106,7 @@ export default function EditAddressPage() {
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">Edit Address</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('edit')} {t('shippingAddresses')}</h1>
         </div>
       </div>
 
@@ -113,7 +116,7 @@ export default function EditAddressPage() {
           {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name *
+              {t('fullName')} *
             </label>
             <input
               type="text"
@@ -129,7 +132,7 @@ export default function EditAddressPage() {
           {/* Phone Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Phone Number *
+              {t('phoneNumber')} *
             </label>
             <input
               type="tel"
@@ -145,7 +148,7 @@ export default function EditAddressPage() {
           {/* Address Line 1 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Address Line 1 *
+              {t('addressLine1')} *
             </label>
             <input
               type="text"
@@ -161,7 +164,7 @@ export default function EditAddressPage() {
           {/* Address Line 2 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Address Line 2 (Optional)
+              {t('addressLine2')}
             </label>
             <input
               type="text"
@@ -177,7 +180,7 @@ export default function EditAddressPage() {
           {/* City */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              City *
+              {t('city')} *
             </label>
             <input
               type="text"
@@ -194,7 +197,7 @@ export default function EditAddressPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                State *
+                {t('state')} *
               </label>
               <input
                 type="text"
@@ -208,7 +211,7 @@ export default function EditAddressPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Postal Code *
+                {t('postalCode')} *
               </label>
               <input
                 type="text"
@@ -225,7 +228,7 @@ export default function EditAddressPage() {
           {/* Country */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Country *
+              {t('country')} *
             </label>
             <select
               name="country"
@@ -254,7 +257,7 @@ export default function EditAddressPage() {
               disabled={loading}
             />
             <label htmlFor="isDefault" className="text-sm font-medium text-gray-700">
-              Set as default shipping address
+              {t('setDefaultAddress')}
             </label>
           </div>
 
@@ -264,7 +267,7 @@ export default function EditAddressPage() {
             disabled={loading}
             className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed mt-6"
           >
-            {loading ? 'Updating...' : 'Update Address'}
+            {loading ? t('saving') : t('saveAddress')}
           </button>
         </form>
       </div>

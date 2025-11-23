@@ -1,7 +1,8 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import {
     User,
@@ -16,53 +17,55 @@ import {
 import toast from 'react-hot-toast';
 
 export default function AccountPage() {
+    const t = useTranslations('Account');
+    const tAuth = useTranslations('Auth');
     const { user, signOut } = useAuth();
     const router = useRouter();
 
     const handleSignOut = async () => {
         try {
             await signOut();
-            toast.success('Signed out successfully');
+            toast.success(t('signedOutSuccess'));
             router.push('/');
         } catch (error) {
             console.error('Error signing out:', error);
-            toast.error('Failed to sign out. Please try again.');
+            toast.error(t('signOutFailed'));
         }
     };
 
     const menuItems = [
         {
             icon: Package,
-            label: 'My Orders',
-            description: 'View your order history',
+            label: t('myOrders'),
+            description: t('viewOrderHistory'),
             path: '/account/orders',
             badge: null
         },
         {
             icon: MapPin,
-            label: 'Shipping Addresses',
-            description: 'Manage delivery addresses',
+            label: t('shippingAddresses'),
+            description: t('manageAddresses'),
             path: '/account/addresses',
             badge: null
         },
         {
             icon: CreditCard,
-            label: 'Payment Methods',
-            description: 'Manage your payment cards',
+            label: t('paymentMethods'),
+            description: t('managePaymentCards'),
             path: '/account/payment-methods',
             badge: null
         },
         {
             icon: Bell,
-            label: 'Notifications',
-            description: 'Manage notification preferences',
+            label: t('notifications'),
+            description: t('manageNotifications'),
             path: '/account/notifications',
             badge: null
         },
         {
             icon: Settings,
-            label: 'Settings',
-            description: 'App preferences and privacy',
+            label: t('settings'),
+            description: t('appPreferences'),
             path: '/account/settings',
             badge: null
         }
@@ -72,7 +75,7 @@ export default function AccountPage() {
         <div className="min-h-screen bg-gray-50 pb-24">
             {/* Header */}
             <div className="bg-white px-4 py-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Account</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('title')}</h1>
 
                 {/* User Profile */}
                 <div className="flex items-center gap-4">
@@ -92,15 +95,15 @@ export default function AccountPage() {
                     </div>
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-gray-900">
-                            {user?.displayName || 'Guest User'}
+                            {user?.displayName || t('guestUser')}
                         </h2>
-                        <p className="text-sm text-gray-500">{user?.email || 'Not signed in'}</p>
+                        <p className="text-sm text-gray-500">{user?.email || t('notSignedIn')}</p>
                         {!user && (
                             <button
                                 onClick={() => router.push('/login')}
                                 className="mt-2 text-sm text-blue-600 font-medium hover:underline"
                             >
-                                Sign in to your account
+                                {t('signInToAccount')}
                             </button>
                         )}
                     </div>
@@ -138,14 +141,14 @@ export default function AccountPage() {
                         className="w-full bg-red-50 text-red-600 rounded-2xl p-4 flex items-center justify-center gap-3 hover:bg-red-100 transition-colors"
                     >
                         <LogOut size={20} />
-                        <span className="font-semibold">Sign Out</span>
+                        <span className="font-semibold">{tAuth('signOut')}</span>
                     </button>
                 </div>
             )}
 
             {/* App Version */}
             <div className="px-4 py-4 text-center">
-                <p className="text-xs text-gray-400">Version 1.0.0</p>
+                <p className="text-xs text-gray-400">{t('version')}</p>
             </div>
         </div>
     );

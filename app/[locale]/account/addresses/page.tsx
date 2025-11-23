@@ -1,22 +1,24 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useAddress } from '@/context/AddressContext';
+import { useTranslations } from 'next-intl';
 import { ArrowLeft, Plus, MapPin, Check, Edit2, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AddressesPage() {
+  const t = useTranslations('Account');
   const router = useRouter();
   const { addresses, loading, deleteAddress, setDefaultAddress, selectedAddressId } = useAddress();
 
   const handleDelete = async (addressId: string) => {
-    if (confirm('Are you sure you want to delete this address?')) {
+    if (confirm(t('deleteAddressConfirm'))) {
       try {
         await deleteAddress(addressId);
-        toast.success('Address deleted successfully');
+        toast.success(t('addressDeletedSuccess'));
       } catch (error) {
         console.error('Error deleting address:', error);
-        toast.error('Failed to delete address');
+        toast.error(t('addressDeleteFailed'));
       }
     }
   };
@@ -24,17 +26,17 @@ export default function AddressesPage() {
   const handleSetDefault = async (addressId: string) => {
     try {
       await setDefaultAddress(addressId);
-      toast.success('Default address updated');
+      toast.success(t('defaultAddressUpdated'));
     } catch (error) {
       console.error('Error setting default address:', error);
-      toast.error('Failed to update default address');
+      toast.error(t('defaultAddressUpdateFailed'));
     }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">Loading addresses...</div>
+        <div className="text-gray-500">{t('loadingAddresses')}</div>
       </div>
     );
   }
@@ -50,7 +52,7 @@ export default function AddressesPage() {
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold text-gray-900 flex-1">Shipping Addresses</h1>
+          <h1 className="text-2xl font-bold text-gray-900 flex-1">{t('shippingAddresses')}</h1>
         </div>
 
         {/* Add New Address Button */}
@@ -59,7 +61,7 @@ export default function AddressesPage() {
           className="w-full bg-black text-white py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors"
         >
           <Plus size={20} />
-          <span className="font-semibold">Add New Address</span>
+          <span className="font-semibold">{t('addNewAddress')}</span>
         </button>
       </div>
 
@@ -69,10 +71,10 @@ export default function AddressesPage() {
           <div className="text-center py-12">
             <MapPin size={64} className="text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              No addresses yet
+              {t('noAddressesYet')}
             </h2>
             <p className="text-gray-500 mb-6">
-              Add a shipping address to continue with checkout
+              {t('addAddressCheckout')}
             </p>
           </div>
         ) : (
@@ -87,7 +89,7 @@ export default function AddressesPage() {
               {address.isDefault && (
                 <div className="absolute top-4 right-4">
                   <span className="bg-black text-white text-xs px-3 py-1 rounded-full font-medium">
-                    Default
+                    {t('default')}
                   </span>
                 </div>
               )}
@@ -116,7 +118,7 @@ export default function AddressesPage() {
                     className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                   >
                     <Check size={16} />
-                    Set as Default
+                    {t('setAsDefault')}
                   </button>
                 )}
                 <button
@@ -124,14 +126,14 @@ export default function AddressesPage() {
                   className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                 >
                   <Edit2 size={16} />
-                  Edit
+                  {t('edit')}
                 </button>
                 <button
                   onClick={() => handleDelete(address.id)}
                   className="flex-1 bg-red-50 text-red-600 py-2 rounded-full text-sm font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
                 >
                   <Trash2 size={16} />
-                  Delete
+                  {t('delete')}
                 </button>
               </div>
             </div>
