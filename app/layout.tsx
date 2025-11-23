@@ -1,39 +1,39 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AntdRegistry } from '@ant-design/nextjs-registry';
+import LayoutApp from "@/components/layout/LayoutApp";
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+	subsets: ["latin"],
+	variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "E-Commerce Store",
-  description: "Modern shopping experience for small businesses",
+	title: "E-Commerce Store",
+	description: "Modern shopping experience for small businesses",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
-        <AntdRegistry>
-          <AuthProvider>
-            <CartProvider>
-              <WishlistProvider>
-                {children}
-              </WishlistProvider>
-            </CartProvider>
-          </AuthProvider>
-        </AntdRegistry>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body className='w-[432px] mx-auto'>
+				<AuthProvider>
+					<CartProvider>
+						<WishlistProvider>
+							<LayoutApp>
+								{children}
+							</LayoutApp>
+						</WishlistProvider>
+					</CartProvider>
+				</AuthProvider>
+			</body>
+		</html>
+	);
 }
