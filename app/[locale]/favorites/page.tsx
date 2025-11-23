@@ -1,14 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
 import products from '@/data/products';
 import Image from 'next/image';
 import { Heart, ShoppingCart } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 
 export default function FavoritesPage() {
+  const t = useTranslations('Favorites');
+  const tCart = useTranslations('Cart');
+  const tProduct = useTranslations('Product');
   const router = useRouter();
   const { wishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -20,7 +24,7 @@ export default function FavoritesPage() {
 
   const handleRemoveFromWishlist = (productId: string) => {
     removeFromWishlist(productId);
-    toast.success('Removed from favorites');
+    toast.success(t('removedFromFavorites'));
   };
 
   const handleAddToCart = (product: typeof products[0]) => {
@@ -34,17 +38,17 @@ export default function FavoritesPage() {
       price: product.price,
       salePrice: product.salePrice
     });
-    toast.success('Added to cart!');
+    toast.success(t('addedToCart'));
   };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       {/* Header */}
       <div className="bg-white px-4 py-6 sticky top-0 z-10 shadow-sm">
-        <h1 className="text-2xl font-bold text-gray-900">Favorites</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
         {wishlistProducts.length > 0 && (
           <p className="text-sm text-gray-500 mt-1">
-            {wishlistProducts.length} {wishlistProducts.length === 1 ? 'item' : 'items'}
+            {wishlistProducts.length} {wishlistProducts.length === 1 ? tCart('item') : tCart('items')}
           </p>
         )}
       </div>
@@ -55,16 +59,16 @@ export default function FavoritesPage() {
           <div className="text-center py-12">
             <Heart size={64} className="text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              No favorites yet
+              {t('empty')}
             </h2>
             <p className="text-gray-500 mb-6">
-              Start adding items you love to your wishlist
+              {t('emptyDescription')}
             </p>
             <button
               onClick={() => router.push('/')}
               className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
             >
-              Start Shopping
+              {t('startShopping')}
             </button>
           </div>
         ) : (
@@ -126,7 +130,7 @@ export default function FavoritesPage() {
                       className="w-full bg-black text-white py-2 rounded-full flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-800 transition-colors"
                     >
                       <ShoppingCart size={16} />
-                      Add to Cart
+                      {tProduct('addToCart')}
                     </button>
                   </div>
                 </div>

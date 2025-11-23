@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 
 export default function LoginPage() {
+  const t = useTranslations('Auth');
   const router = useRouter();
   const { signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
@@ -18,25 +20,25 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error('Please fill in all fields');
+      toast.error(t('fillAllFields'));
       return;
     }
 
     setLoading(true);
     try {
       await signIn(email, password);
-      toast.success('Welcome back!');
+      toast.success(t('welcomeBack'));
       router.push('/');
     } catch (error: any) {
       console.error('Login error:', error);
       if (error.code === 'auth/user-not-found') {
-        toast.error('No account found with this email');
+        toast.error(t('userNotFound'));
       } else if (error.code === 'auth/wrong-password') {
-        toast.error('Incorrect password');
+        toast.error(t('wrongPassword'));
       } else if (error.code === 'auth/invalid-email') {
-        toast.error('Invalid email address');
+        toast.error(t('invalidEmail'));
       } else {
-        toast.error('Failed to sign in. Please try again.');
+        toast.error(t('signInFailed'));
       }
     } finally {
       setLoading(false);
@@ -47,11 +49,11 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithGoogle();
-      toast.success('Welcome back!');
+      toast.success(t('welcomeBack'));
       router.push('/');
     } catch (error) {
       console.error('Google login error:', error);
-      toast.error('Failed to sign in with Google');
+      toast.error(t('signInWithGoogleFailed'));
     } finally {
       setLoading(false);
     }
@@ -70,9 +72,9 @@ export default function LoginPage() {
           className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Back</span>
+          <span className="text-sm font-medium">{t('back')}</span>
         </button>
-        <h1 className="text-3xl font-bold text-gray-900">Login</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('login')}</h1>
       </div>
 
       {/* Form */}
@@ -81,7 +83,7 @@ export default function LoginPage() {
           {/* Email Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Enter your Email
+              {t('enterEmail')}
             </label>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -91,7 +93,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="abc12@gmail.com"
+                placeholder={t('emailPlaceholder')}
                 className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                 disabled={loading}
               />
@@ -101,7 +103,7 @@ export default function LoginPage() {
           {/* Password Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Enter your password
+              {t('enterPassword')}
             </label>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -111,7 +113,7 @@ export default function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
+                placeholder={t('passwordPlaceholder')}
                 className="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                 disabled={loading}
               />
@@ -133,7 +135,7 @@ export default function LoginPage() {
               disabled={loading}
               className="text-sm text-gray-600 hover:text-gray-900 hover:underline disabled:opacity-50"
             >
-              forgot password?
+              {t('forgotPassword')}
             </button>
           </div>
 
@@ -143,26 +145,26 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            {loading ? 'Signing in...' : 'Login'}
+            {loading ? t('signingIn') : t('login')}
           </button>
         </form>
 
         {/* Sign Up Link */}
         <div className="text-center mt-4">
-          <span className="text-sm text-gray-600">Don't have an account? </span>
+          <span className="text-sm text-gray-600">{t('noAccount')} </span>
           <button
             onClick={() => router.push('/register')}
             className="text-sm font-semibold text-gray-900 hover:underline"
             disabled={loading}
           >
-            Sign Up
+            {t('signUp')}
           </button>
         </div>
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-sm text-gray-500">or</span>
+          <span className="text-sm text-gray-500">{t('or')}</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
@@ -178,13 +180,13 @@ export default function LoginPage() {
             <path d="M4.35909 11.7273C4.14545 11.1273 4.02273 10.4773 4.02273 9.81819C4.02273 9.15909 4.14545 8.50909 4.35909 7.90909V5.31819H0.890909C0.218182 6.65909 -0.181818 8.18182 -0.181818 9.81819C-0.181818 11.4545 0.218182 12.9773 0.890909 14.3182L4.35909 11.7273Z" fill="#FBBC05" />
             <path d="M10 3.61364C11.3182 3.61364 12.5091 4.07727 13.4409 4.96364L16.3818 2.02273C14.9591 0.690909 12.6955 -0.181818 10 -0.181818C6.09091 -0.181818 2.63636 2.02273 0.890909 5.31818L4.35909 7.90909C5.19091 5.47273 7.39545 3.61364 10 3.61364Z" fill="#EA4335" />
           </svg>
-          Continue with Google
+          {t('continueWithGoogle')}
         </button>
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-sm text-gray-500">or</span>
+          <span className="text-sm text-gray-500">{t('or')}</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
@@ -194,7 +196,7 @@ export default function LoginPage() {
           disabled={loading}
           className="w-full text-gray-600 py-4 font-medium hover:text-gray-900 transition-colors disabled:opacity-50"
         >
-          Continue as Guest
+          {t('continueAsGuest')}
         </button>
       </div>
     </div>

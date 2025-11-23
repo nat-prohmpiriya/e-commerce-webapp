@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Mail, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations('Auth');
   const router = useRouter();
   const { resetPassword } = useAuth();
   const [email, setEmail] = useState('');
@@ -16,14 +18,14 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
 
     if (!email) {
-      toast.error('Please enter your email address');
+      toast.error(t('enterEmailAddress'));
       return;
     }
 
     setLoading(true);
     try {
       await resetPassword(email);
-      toast.success('Password reset email sent! Check your inbox.');
+      toast.success(t('resetEmailSent'));
       // Wait a bit before redirecting
       setTimeout(() => {
         router.push('/login');
@@ -31,11 +33,11 @@ export default function ForgotPasswordPage() {
     } catch (error: any) {
       console.error('Reset password error:', error);
       if (error.code === 'auth/user-not-found') {
-        toast.error('No account found with this email');
+        toast.error(t('userNotFound'));
       } else if (error.code === 'auth/invalid-email') {
-        toast.error('Invalid email address');
+        toast.error(t('invalidEmail'));
       } else {
-        toast.error('Failed to send reset email. Please try again.');
+        toast.error(t('resetEmailFailed'));
       }
     } finally {
       setLoading(false);
@@ -51,11 +53,11 @@ export default function ForgotPasswordPage() {
           className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Back</span>
+          <span className="text-sm font-medium">{t('back')}</span>
         </button>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Forgot Password</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('forgotPasswordTitle')}</h1>
         <p className="text-gray-600">
-          Enter your email address and we'll send you a link to reset your password.
+          {t('forgotPasswordDescription')}
         </p>
       </div>
 
@@ -65,7 +67,7 @@ export default function ForgotPasswordPage() {
           {/* Email Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+              {t('emailAddress')}
             </label>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -75,7 +77,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="abc12@gmail.com"
+                placeholder={t('emailPlaceholder')}
                 className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                 disabled={loading}
               />
@@ -88,19 +90,19 @@ export default function ForgotPasswordPage() {
             disabled={loading}
             className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            {loading ? 'Sending...' : 'Send Reset Link'}
+            {loading ? t('sending') : t('sendResetLink')}
           </button>
         </form>
 
         {/* Back to Login Link */}
         <div className="text-center mt-6">
-          <span className="text-sm text-gray-600">Remember your password? </span>
+          <span className="text-sm text-gray-600">{t('rememberPassword')} </span>
           <button
             onClick={() => router.push('/login')}
             className="text-sm font-semibold text-gray-900 hover:underline"
             disabled={loading}
           >
-            Back to Login
+            {t('backToLogin')}
           </button>
         </div>
       </div>

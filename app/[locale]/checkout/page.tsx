@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronDown, Menu, MapPin, Plus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAddress } from '@/context/AddressContext';
@@ -9,8 +8,12 @@ import { useOrder } from '@/context/OrderContext';
 import { OrderItem } from '@/types';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 
 export default function CheckoutPage() {
+  const t = useTranslations('Checkout');
+  const tCart = useTranslations('Cart');
   const router = useRouter();
   const { cart, getCartTotal, getCartItemCount, clearCart } = useCart();
   const { addresses, getSelectedAddress, selectAddress } = useAddress();
@@ -26,7 +29,7 @@ export default function CheckoutPage() {
 
   const handlePayment = async () => {
     if (!selectedAddress) {
-      toast.error('Please select a shipping address');
+      toast.error(t('selectAddress'));
       return;
     }
 
@@ -76,13 +79,13 @@ export default function CheckoutPage() {
       clearCart();
 
       // Show success message
-      toast.success(`Order ${order.orderNumber} placed successfully!`);
+      toast.success(t('orderPlaced', { orderNumber: order.orderNumber }));
 
       // Redirect to order confirmation or orders page
       router.push('/account/orders');
     } catch (error) {
       console.error('Error creating order:', error);
-      toast.error('Failed to place order. Please try again.');
+      toast.error(t('orderFailed'));
     } finally {
       setIsProcessing(false);
     }
@@ -99,12 +102,12 @@ export default function CheckoutPage() {
   if (cart.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
-        <p className="text-gray-500 mb-4">No items to checkout</p>
+        <p className="text-gray-500 mb-4">{t('noItems')}</p>
         <button
           onClick={() => router.push('/cart')}
           className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
         >
-          Go to Cart
+          {t('goToCart')}
         </button>
       </div>
     );
@@ -121,7 +124,7 @@ export default function CheckoutPage() {
           >
             <ChevronLeft size={24} />
           </button>
-          <h1 className="text-xl font-bold text-gray-900">Checkout</h1>
+          <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
           <button className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors">
             <Menu size={24} />
           </button>
@@ -158,7 +161,7 @@ export default function CheckoutPage() {
                       ${displayPrice.toFixed(2)}
                     </span>
                     <span className="text-sm text-gray-600">
-                      Qty: {item.quantity}
+                      {t('quantity')}: {item.quantity}
                     </span>
                   </div>
                 </div>
@@ -169,7 +172,7 @@ export default function CheckoutPage() {
 
         {/* Shipping Address */}
         <div className="bg-white rounded-2xl p-4">
-          <h2 className="font-semibold text-gray-900 mb-3">Shipping Address</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">{t('shippingAddress')}</h2>
           {selectedAddress ? (
             <button
               onClick={handleAddressClick}
@@ -202,14 +205,14 @@ export default function CheckoutPage() {
               className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-50 transition-colors"
             >
               <Plus size={20} className="text-gray-400" />
-              <span className="text-sm font-medium text-gray-600">Add Shipping Address</span>
+              <span className="text-sm font-medium text-gray-600">{t('addShippingAddress')}</span>
             </button>
           )}
         </div>
 
         {/* Payment Method */}
         <div className="bg-white rounded-2xl p-4">
-          <h2 className="font-semibold text-gray-900 mb-3">Payment Method</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">{t('paymentMethod')}</h2>
           <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
             <div className="flex items-center gap-3">
               <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">
@@ -224,20 +227,20 @@ export default function CheckoutPage() {
         {/* Price Breakdown */}
         <div className="bg-white rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Total ({totalItems} items)</span>
+            <span className="text-gray-600">{tCart('total')} ({totalItems} {totalItems === 1 ? tCart('item') : tCart('items')})</span>
             <span className="font-semibold text-gray-900">${subtotal.toFixed(2)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Shipping Fee</span>
+            <span className="text-gray-600">{t('shippingFee')}</span>
             <span className="font-semibold text-gray-900">${shippingFee.toFixed(2)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Discount</span>
+            <span className="text-gray-600">{t('discount')}</span>
             <span className="font-semibold text-gray-900">${discount.toFixed(2)}</span>
           </div>
           <div className="border-t border-gray-200 pt-3">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-gray-900">Sub Total</span>
+              <span className="font-semibold text-gray-900">{t('subTotal')}</span>
               <span className="font-bold text-xl text-gray-900">${total.toFixed(2)}</span>
             </div>
           </div>
@@ -251,7 +254,7 @@ export default function CheckoutPage() {
           disabled={isProcessing}
           className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isProcessing ? 'Processing...' : 'Pay'}
+          {isProcessing ? t('processing') : t('pay')}
         </button>
       </div>
     </div>

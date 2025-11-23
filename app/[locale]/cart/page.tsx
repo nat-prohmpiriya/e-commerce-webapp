@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import CartItemCard from '@/components/CartItemCard';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 
 export default function CartPage() {
+  const t = useTranslations('Cart');
   const router = useRouter();
   const { cart, updateQuantity, removeFromCart, loading } = useCart();
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -72,7 +74,7 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     if (selectedCount === 0) {
-      toast.error('Please select at least one item to checkout');
+      toast.error(t('selectAtLeastOne'));
       return;
     }
     router.push('/checkout');
@@ -81,7 +83,7 @@ export default function CartPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Loading cart...</p>
+        <p className="text-gray-500">{t('loadingCart')}</p>
       </div>
     );
   }
@@ -97,7 +99,7 @@ export default function CartPage() {
           >
             <ChevronLeft size={24} />
           </button>
-          <h1 className="text-xl font-bold text-gray-900">Shopping Cart</h1>
+          <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
 
@@ -111,7 +113,7 @@ export default function CartPage() {
               className="w-5 h-5 rounded border-gray-300 text-black focus:ring-black cursor-pointer"
             />
             <span className="text-sm font-medium text-gray-700">
-              Select All ({cart.length} items)
+              {t('selectAll')} ({cart.length} {cart.length === 1 ? t('item') : t('items')})
             </span>
           </div>
         )}
@@ -121,12 +123,12 @@ export default function CartPage() {
       <div className="px-4 py-4">
         {cart.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 mb-4">Your cart is empty</p>
+            <p className="text-gray-500 mb-4">{t('empty')}</p>
             <button
               onClick={() => router.push('/')}
               className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
             >
-              Continue Shopping
+              {t('continueShopping')}
             </button>
           </div>
         ) : (
@@ -156,13 +158,13 @@ export default function CartPage() {
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-gray-600">
-                Selected ({selectedCount} {selectedCount === 1 ? 'item' : 'items'})
+                {t('selected')} ({selectedCount} {selectedCount === 1 ? t('item') : t('items')})
               </span>
-              <span className="text-sm text-gray-600">Subtotal</span>
+              <span className="text-sm text-gray-600">{t('subtotal')}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-xs text-gray-500">
-                {selectedCartItems.reduce((sum, item) => sum + item.quantity, 0)} items
+                {selectedCartItems.reduce((sum, item) => sum + item.quantity, 0)} {t('items')}
               </span>
               <span className="text-2xl font-bold text-gray-900">
                 ${subtotal.toFixed(2)}
@@ -175,7 +177,7 @@ export default function CartPage() {
             disabled={selectedCount === 0}
             className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            Checkout
+            {t('checkout')}
           </button>
         </div>
       )}
