@@ -68,7 +68,7 @@ export default function ProductDetailPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen bg-gray-50 pb-4">
             {/* Product Image */}
             <div className="relative aspect-[3/4] bg-gray-200">
                 <Image

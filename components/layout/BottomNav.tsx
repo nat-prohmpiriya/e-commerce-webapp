@@ -41,8 +41,12 @@ export default function BottomNav() {
         },
     ];
 
+    if (pathname !== '/') {
+        return null;
+    }
+
     return (
-        <div className="fixed bottom-5 left-0 right-0 w-[432px] mx-auto z-50">
+        <div className="fixed bottom-2 left-0 right-0 w-[432px] mx-auto z-50">
             <div className="bg-black rounded-4xl px-6 py-4 shadow-2xl w-[96%] mx-auto">
                 <div className="flex justify-between items-center">
                     {navItems.map((item) => {
