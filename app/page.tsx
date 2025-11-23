@@ -108,7 +108,7 @@ export default function HomePage() {
       <CategoryTabs onCategoryChange={setSelectedCategory} />
 
       {/* Product Grid */}
-      <div className="px-4 pb-6">
+      <div className="px-4 md:px-6 pb-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4"></div>
@@ -120,7 +120,7 @@ export default function HomePage() {
             <p className="text-gray-500">ไม่พบสินค้าในหมวดหมู่นี้</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

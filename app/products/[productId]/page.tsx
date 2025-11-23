@@ -117,36 +117,46 @@ export default function ProductDetailPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 pb-4">
-            {/* Product Image */}
-            <div className="relative aspect-[3/4] bg-gray-200">
-                <Image
-                    src={product.images[0]}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    priority
-                />
-
-                {/* Top Navigation */}
-                <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
-                    <button
-                        onClick={() => router.back()}
-                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50"
-                    >
-                        <ChevronLeft size={24} />
-                    </button>
-                    <button
-                        onClick={handleToggleFavorite}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ${isFavorite ? 'bg-black text-white' : 'bg-white text-gray-700'
-                            }`}
-                    >
-                        <Heart size={20} className={isFavorite ? 'fill-white' : ''} />
-                    </button>
-                </div>
+            {/* Mobile Back Button */}
+            <div className="md:hidden sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+                <button
+                    onClick={() => router.back()}
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100"
+                >
+                    <ChevronLeft size={24} />
+                </button>
+                <span className="font-semibold text-gray-900">Product Details</span>
             </div>
 
-            {/* Product Details */}
-            <div className="bg-white rounded-t-3xl -mt-6 relative px-6 pt-6">
+            {/* Desktop Layout: 2 Columns */}
+            <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Left: Product Image */}
+                    <div className="space-y-4">
+                        <div className="relative aspect-[3/4] md:aspect-square bg-gray-200 rounded-2xl overflow-hidden">
+                            <Image
+                                src={product.images[0]}
+                                alt={product.name}
+                                fill
+                                className="object-cover"
+                                priority
+                            />
+
+                            {/* Mobile: Wishlist on Image */}
+                            <div className="md:hidden absolute top-4 right-4">
+                                <button
+                                    onClick={handleToggleFavorite}
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ${isFavorite ? 'bg-black text-white' : 'bg-white text-gray-700'
+                                        }`}
+                                >
+                                    <Heart size={20} className={isFavorite ? 'fill-white' : ''} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Product Details */}
+                    <div className="bg-white md:bg-transparent rounded-t-3xl md:rounded-none -mt-6 md:mt-0 relative px-6 md:px-0 pt-6 md:pt-0">
                 {/* Product Name */}
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
                     {product.name}
@@ -247,18 +257,34 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Add to Cart Button */}
-                <button
-                    onClick={handleAddToCart}
-                    className="w-full bg-black text-white py-4 rounded-full flex items-center justify-center gap-3 font-semibold text-lg hover:bg-gray-800 transition-colors mb-6"
-                >
-                    <ShoppingCart size={24} />
-                    <span>Add to Cart | ${displayPrice.toFixed(2)}</span>
-                    {originalPrice && (
-                        <span className="line-through text-gray-400 text-sm">
-                            ${originalPrice.toFixed(2)}
-                        </span>
-                    )}
-                </button>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={handleAddToCart}
+                        className="flex-1 bg-black text-white py-4 rounded-full flex items-center justify-center gap-3 font-semibold text-lg hover:bg-gray-800 transition-colors"
+                    >
+                        <ShoppingCart size={24} />
+                        <span>Add to Cart | ${displayPrice.toFixed(2)}</span>
+                        {originalPrice && (
+                            <span className="line-through text-gray-400 text-sm">
+                                ${originalPrice.toFixed(2)}
+                            </span>
+                        )}
+                    </button>
+
+                    {/* Desktop: Wishlist Button */}
+                    <button
+                        onClick={handleToggleFavorite}
+                        className={`hidden md:flex w-14 h-14 rounded-full items-center justify-center border-2 transition-all ${
+                            isFavorite
+                                ? 'bg-black border-black text-white'
+                                : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+                        }`}
+                    >
+                        <Heart size={24} className={isFavorite ? 'fill-white' : ''} />
+                    </button>
+                </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

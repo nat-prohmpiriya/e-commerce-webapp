@@ -68,21 +68,22 @@ export default function FilterSheet({ isOpen, onClose, onApply, initialFilters }
         onClick={onClose}
       />
 
-      {/* Bottom Sheet */}
-      <div className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl animate-slide-up max-h-[85vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-900">Filters</h2>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
+      {/* Mobile: Bottom Sheet | Desktop: Centered Modal */}
+      <div className="fixed inset-x-0 bottom-0 md:inset-0 z-50 md:flex md:items-center md:justify-center">
+        <div className="bg-white md:rounded-2xl rounded-t-3xl shadow-2xl animate-slide-up md:animate-fade-in max-h-[85vh] md:max-h-[90vh] md:max-w-2xl md:w-full md:mx-4 overflow-hidden flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b">
+            <h2 className="text-xl font-bold text-gray-900">Filters</h2>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Sort By */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Sort By</h3>
@@ -195,6 +196,7 @@ export default function FilterSheet({ isOpen, onClose, onApply, initialFilters }
             </button>
           </div>
         </div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -208,6 +210,19 @@ export default function FilterSheet({ isOpen, onClose, onApply, initialFilters }
         }
         .animate-slide-up {
           animation: slide-up 0.3s ease-out;
+        }
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out;
         }
       `}</style>
     </>

@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className='w-[432px] mx-auto'>
+			<body className=''>
 				<AuthProvider>
 					<StoreSettingsProvider>
 						<CategoryProvider>
