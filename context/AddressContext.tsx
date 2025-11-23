@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Address } from '@/types';
 import { useAuth } from './AuthContext';
@@ -93,11 +93,17 @@ export function AddressProvider({ children }: { children: React.ReactNode }) {
 
   // Save addresses to Firestore for logged-in users
   const saveAddressesToFirestore = async (userId: string, addressList: Address[]) => {
+    const userRef = doc(db, 'users', userId);
     try {
-      const userRef = doc(db, 'users', userId);
-      await setDoc(userRef, { addresses: addressList }, { merge: true });
+      await updateDoc(userRef, { addresses: addressList });
     } catch (error) {
       console.error('Error saving addresses to Firestore:', error);
+      // If document doesn't exist, create it with setDoc
+      try {
+        await setDoc(userRef, { addresses: addressList }, { merge: true });
+      } catch (setError) {
+        console.error('Error creating user document:', setError);
+      }
     }
   };
 

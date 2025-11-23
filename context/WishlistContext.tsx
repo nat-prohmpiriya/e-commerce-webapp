@@ -135,14 +135,18 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     initWishlist();
   }, [user]);
 
-  // Save wishlist whenever it changes
+  // Save wishlist whenever it changes (with debouncing)
   useEffect(() => {
     if (!loading) {
-      if (user) {
-        saveWishlistToFirestore(user.id, wishlist);
-      } else {
-        saveWishlistToLocalStorage(wishlist);
-      }
+      const timeoutId = setTimeout(() => {
+        if (user) {
+          saveWishlistToFirestore(user.id, wishlist);
+        } else {
+          saveWishlistToLocalStorage(wishlist);
+        }
+      }, 500); // 500ms debounce
+
+      return () => clearTimeout(timeoutId);
     }
   }, [wishlist, user, loading]);
 

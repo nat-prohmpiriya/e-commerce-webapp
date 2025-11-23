@@ -147,14 +147,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     initCart();
   }, [user]);
 
-  // Save cart whenever it changes
+  // Save cart whenever it changes (with debouncing)
   useEffect(() => {
     if (!loading) {
-      if (user) {
-        saveCartToFirestore(user.id, cart);
-      } else {
-        saveCartToLocalStorage(cart);
-      }
+      const timeoutId = setTimeout(() => {
+        if (user) {
+          saveCartToFirestore(user.id, cart);
+        } else {
+          saveCartToLocalStorage(cart);
+        }
+      }, 500); // 500ms debounce
+
+      return () => clearTimeout(timeoutId);
     }
   }, [cart, user, loading]);
 

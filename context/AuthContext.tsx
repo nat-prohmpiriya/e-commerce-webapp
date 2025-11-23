@@ -12,7 +12,7 @@ import {
   sendPasswordResetEmail,
   updateProfile,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { User } from '@/types';
 
@@ -59,39 +59,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        const newUser: User = {
+        const newUser: any = {
           id: firebaseUser.uid,
           email: firebaseUser.email || '',
           displayName: additionalData?.displayName || firebaseUser.displayName || '',
-          photoURL: firebaseUser.photoURL || undefined,
-          phoneNumber: firebaseUser.phoneNumber || undefined,
           role: 'customer',
-          createdAt: new Date() as any,
-          updatedAt: new Date() as any,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
           addresses: [],
           paymentMethods: [],
         };
 
+        // Only add optional fields if they exist
+        if (firebaseUser.photoURL) {
+          newUser.photoURL = firebaseUser.photoURL;
+        }
+        if (firebaseUser.phoneNumber) {
+          newUser.phoneNumber = firebaseUser.phoneNumber;
+        }
+
         await setDoc(userRef, newUser);
-        return newUser;
+
+        // Return user object with Date for local state
+        return {
+          ...newUser,
+          photoURL: firebaseUser.photoURL || undefined,
+          phoneNumber: firebaseUser.phoneNumber || undefined,
+          createdAt: new Date() as any,
+          updatedAt: new Date() as any,
+        } as User;
       }
 
       return userSnap.data() as User;
     } catch (error) {
       console.error('Error creating user document:', error);
       // Return a minimal user object if Firestore fails
-      return {
+      const fallbackUser: any = {
         id: firebaseUser.uid,
         email: firebaseUser.email || '',
         displayName: additionalData?.displayName || firebaseUser.displayName || '',
-        photoURL: firebaseUser.photoURL || undefined,
-        phoneNumber: firebaseUser.phoneNumber || undefined,
         role: 'customer' as const,
         createdAt: new Date() as any,
         updatedAt: new Date() as any,
         addresses: [],
         paymentMethods: [],
       };
+
+      // Only add optional fields if they exist
+      if (firebaseUser.photoURL) {
+        fallbackUser.photoURL = firebaseUser.photoURL;
+      }
+      if (firebaseUser.phoneNumber) {
+        fallbackUser.phoneNumber = firebaseUser.phoneNumber;
+      }
+
+      return fallbackUser as User;
     }
   };
 
@@ -159,7 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userRef = doc(db, 'users', user.id);
       await updateDoc(userRef, {
         ...data,
-        updatedAt: new Date(),
+        updatedAt: serverTimestamp(),
       });
 
       // Update local state
@@ -191,18 +213,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
           console.error('Error in auth state change handler:', error);
           // Create a basic user object from Firebase Auth data if Firestore fails
-          setUser({
+          const fallbackUser: any = {
             id: firebaseUser.uid,
             email: firebaseUser.email || '',
             displayName: firebaseUser.displayName || '',
-            photoURL: firebaseUser.photoURL || undefined,
-            phoneNumber: firebaseUser.phoneNumber || undefined,
             role: 'customer' as const,
             createdAt: new Date() as any,
             updatedAt: new Date() as any,
             addresses: [],
             paymentMethods: [],
-          });
+          };
+
+          // Only add optional fields if they exist
+          if (firebaseUser.photoURL) {
+            fallbackUser.photoURL = firebaseUser.photoURL;
+          }
+          if (firebaseUser.phoneNumber) {
+            fallbackUser.phoneNumber = firebaseUser.phoneNumber;
+          }
+
+          setUser(fallbackUser as User);
         }
       } else {
         setUser(null);
