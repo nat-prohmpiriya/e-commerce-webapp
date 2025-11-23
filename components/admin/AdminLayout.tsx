@@ -14,6 +14,8 @@ import {
   X,
   LogOut,
   ChevronRight,
+  FolderOpen,
+  Database,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -33,6 +35,11 @@ const navigation = [
     icon: Package,
   },
   {
+    name: 'Categories',
+    href: '/admin/categories',
+    icon: FolderOpen,
+  },
+  {
     name: 'Orders',
     href: '/admin/orders',
     icon: ShoppingCart,
@@ -46,6 +53,11 @@ const navigation = [
     name: 'Discounts',
     href: '/admin/discounts',
     icon: Tag,
+  },
+  {
+    name: 'Seed Database',
+    href: '/admin/seed',
+    icon: Database,
   },
   {
     name: 'Settings',
@@ -81,13 +93,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between px-6 py-5 border-b">
+          <div className="flex items-center justify-between px-6 py-5 ">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">A</span>
@@ -108,7 +119,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* Navigation */}
           <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
+              // Fix: Dashboard should only match exact path, not sub-paths
+              const isActive = item.href === '/admin'
+                ? pathname === '/admin'
+                : pathname === item.href || pathname?.startsWith(item.href + '/');
               const Icon = item.icon;
 
               return (
@@ -118,11 +132,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     router.push(item.href);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   <Icon size={20} />
                   <span>{item.name}</span>

@@ -37,13 +37,49 @@ export default function AdminDashboard() {
         const ordersRef = collection(db, 'orders');
         const ordersSnapshot = await getDocs(ordersRef);
 
+        // Calculate current month and last month data
+        const now = new Date();
+        const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
         let totalRevenue = 0;
+        let currentMonthRevenue = 0;
+        let lastMonthRevenue = 0;
+        let currentMonthOrders = 0;
+        let lastMonthOrders = 0;
+
         ordersSnapshot.forEach((doc) => {
           const order = doc.data();
           if (order.status !== 'cancelled') {
-            totalRevenue += order.total || 0;
+            const orderTotal = order.total || 0;
+            totalRevenue += orderTotal;
+
+            // Get order date
+            const orderDate = order.createdAt?.toDate ? order.createdAt.toDate() : new Date(order.createdAt);
+
+            // Check if order is in current month
+            if (orderDate >= currentMonthStart) {
+              currentMonthRevenue += orderTotal;
+              currentMonthOrders++;
+            }
+
+            // Check if order is in last month
+            if (orderDate >= lastMonthStart && orderDate <= lastMonthEnd) {
+              lastMonthRevenue += orderTotal;
+              lastMonthOrders++;
+            }
           }
         });
+
+        // Calculate percentage changes
+        const revenueChange = lastMonthRevenue > 0
+          ? ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
+          : currentMonthRevenue > 0 ? 100 : 0;
+
+        const ordersChange = lastMonthOrders > 0
+          ? ((currentMonthOrders - lastMonthOrders) / lastMonthOrders) * 100
+          : currentMonthOrders > 0 ? 100 : 0;
 
         // Get total products
         const productsRef = collection(db, 'products');
@@ -53,17 +89,13 @@ export default function AdminDashboard() {
         const usersRef = collection(db, 'users');
         const usersSnapshot = await getDocs(usersRef);
 
-        // Calculate changes (mock for now)
-        const revenueChange = 12.5; // Mock percentage
-        const ordersChange = 8.3; // Mock percentage
-
         setStats({
           totalRevenue,
           totalOrders: ordersSnapshot.size,
           totalProducts: productsSnapshot.size,
           totalUsers: usersSnapshot.size,
-          revenueChange,
-          ordersChange,
+          revenueChange: Math.round(revenueChange * 10) / 10,
+          ordersChange: Math.round(ordersChange * 10) / 10,
         });
       } catch (error) {
         console.error('Error fetching stats:', error);

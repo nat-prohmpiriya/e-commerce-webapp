@@ -1,9 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { collection, doc, getDoc, setDoc, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Order, OrderItem, ShippingAddress, OrderPaymentMethod } from '@/types';
+import { Order, OrderItem, ShippingAddress, OrderPaymentMethod, OrderStatus } from '@/types';
 import { useAuth } from './AuthContext';
 
 interface OrderContextType {
@@ -11,6 +11,8 @@ interface OrderContextType {
   loading: boolean;
   createOrder: (orderData: CreateOrderData) => Promise<Order>;
   getOrderById: (orderId: string) => Order | null;
+  getAllOrders: () => Promise<Order[]>;
+  updateOrderStatus: (orderId: string, status: OrderStatus) => Promise<void>;
   refreshOrders: () => Promise<void>;
 }
 
@@ -93,18 +95,42 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     return [];
   };
 
+  // Deep clean function to remove undefined values at all levels
+  const deepClean = (obj: any): any => {
+    if (obj === null || obj === undefined) return null;
+    if (Array.isArray(obj)) return obj.map(deepClean).filter(item => item !== null && item !== undefined);
+    if (typeof obj === 'object') {
+      // Handle Timestamp objects separately
+      if (obj instanceof Timestamp) return obj;
+
+      return Object.fromEntries(
+        Object.entries(obj)
+          .filter(([_, v]) => v !== undefined)
+          .map(([k, v]) => [k, deepClean(v)])
+      );
+    }
+    return obj;
+  };
+
   // Save order to Firestore
   const saveOrderToFirestore = async (order: Order) => {
     try {
       const orderRef = doc(db, 'orders', order.id);
-      await setDoc(orderRef, {
+
+      // Prepare order data with Timestamp conversion
+      const orderData = {
         ...order,
         createdAt: Timestamp.fromDate(order.createdAt instanceof Date ? order.createdAt : new Date(order.createdAt)),
         updatedAt: Timestamp.fromDate(order.updatedAt instanceof Date ? order.updatedAt : new Date(order.updatedAt)),
         estimatedDeliveryDate: order.estimatedDeliveryDate
           ? Timestamp.fromDate(order.estimatedDeliveryDate instanceof Date ? order.estimatedDeliveryDate : new Date(order.estimatedDeliveryDate))
           : null,
-      });
+      };
+
+      // Deep clean undefined values at all levels
+      const cleanOrderData = deepClean(orderData);
+
+      await setDoc(orderRef, cleanOrderData);
     } catch (error) {
       console.error('Error saving order to Firestore:', error);
       throw error;
@@ -186,6 +212,53 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     return orders.find(order => order.id === orderId) || null;
   };
 
+  // Get all orders (for admin)
+  const getAllOrders = async (): Promise<Order[]> => {
+    try {
+      const ordersRef = collection(db, 'orders');
+      const q = query(ordersRef, orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+
+      const allOrders: Order[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        allOrders.push({
+          ...data,
+          id: doc.id,
+          createdAt: data.createdAt?.toDate() || new Date(),
+          updatedAt: data.updatedAt?.toDate() || new Date(),
+          estimatedDeliveryDate: data.estimatedDeliveryDate?.toDate(),
+        } as Order);
+      });
+
+      return allOrders;
+    } catch (error) {
+      console.error('Error loading all orders:', error);
+      return [];
+    }
+  };
+
+  // Update order status (for admin)
+  const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+    try {
+      const orderRef = doc(db, 'orders', orderId);
+      await updateDoc(orderRef, {
+        status,
+        updatedAt: Timestamp.now(),
+      });
+
+      // Update local state
+      setOrders(orders.map(order =>
+        order.id === orderId
+          ? { ...order, status, updatedAt: new Date() as any }
+          : order
+      ));
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+  };
+
   // Refresh orders from storage
   const refreshOrders = async () => {
     setLoading(true);
@@ -204,6 +277,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     loading,
     createOrder,
     getOrderById,
+    getAllOrders,
+    updateOrderStatus,
     refreshOrders,
   };
 

@@ -4,17 +4,21 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import Image from 'next/image';
 
-export default function Header() {
+interface HeaderProps {
+  onFilterClick?: () => void;
+}
+
+export default function Header({ onFilterClick }: HeaderProps) {
   const { user } = useAuth();
 
   return (
-    <div className="px-4 pt-4 pb-2">
-      {/* User Greeting */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-4 md:px-6 pt-4 pb-2">
+      {/* User Greeting - Only on Mobile */}
+      <div className="md:hidden flex items-center justify-between mb-6">
         <div>
           <p className="text-gray-500 text-sm">Hello, Welcome 👋</p>
           <h1 className="text-xl font-bold text-gray-900">
-            {user?.displayName || 'Albert Stevano'}
+            {user?.displayName || 'Guest'}
           </h1>
         </div>
         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
@@ -29,11 +33,17 @@ export default function Header() {
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-blue-100">
               <span className="text-blue-600 font-semibold text-lg">
-                {user?.displayName?.charAt(0) || 'A'}
+                {user?.displayName?.charAt(0) || 'G'}
               </span>
             </div>
           )}
         </div>
+      </div>
+
+      {/* Desktop Title */}
+      <div className="hidden md:block mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Discover Products</h1>
+        <p className="text-gray-500 text-sm mt-1">Find your perfect style</p>
       </div>
 
       {/* Search Bar */}
@@ -46,7 +56,10 @@ export default function Header() {
             className="w-full pl-12 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-gray-200"
           />
         </div>
-        <button className="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition-colors">
+        <button
+          onClick={onFilterClick}
+          className="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition-colors"
+        >
           <SlidersHorizontal size={24} />
         </button>
       </div>
