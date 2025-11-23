@@ -4,7 +4,11 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import Image from 'next/image';
 
-export default function Header() {
+interface HeaderProps {
+  onFilterClick?: () => void;
+}
+
+export default function Header({ onFilterClick }: HeaderProps) {
   const { user } = useAuth();
 
   return (
@@ -46,7 +50,10 @@ export default function Header() {
             className="w-full pl-12 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-gray-200"
           />
         </div>
-        <button className="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition-colors">
+        <button
+          onClick={onFilterClick}
+          className="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition-colors"
+        >
           <SlidersHorizontal size={24} />
         </button>
       </div>

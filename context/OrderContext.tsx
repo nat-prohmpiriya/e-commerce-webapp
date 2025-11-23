@@ -95,18 +95,42 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     return [];
   };
 
+  // Deep clean function to remove undefined values at all levels
+  const deepClean = (obj: any): any => {
+    if (obj === null || obj === undefined) return null;
+    if (Array.isArray(obj)) return obj.map(deepClean).filter(item => item !== null && item !== undefined);
+    if (typeof obj === 'object') {
+      // Handle Timestamp objects separately
+      if (obj instanceof Timestamp) return obj;
+
+      return Object.fromEntries(
+        Object.entries(obj)
+          .filter(([_, v]) => v !== undefined)
+          .map(([k, v]) => [k, deepClean(v)])
+      );
+    }
+    return obj;
+  };
+
   // Save order to Firestore
   const saveOrderToFirestore = async (order: Order) => {
     try {
       const orderRef = doc(db, 'orders', order.id);
-      await setDoc(orderRef, {
+
+      // Prepare order data with Timestamp conversion
+      const orderData = {
         ...order,
         createdAt: Timestamp.fromDate(order.createdAt instanceof Date ? order.createdAt : new Date(order.createdAt)),
         updatedAt: Timestamp.fromDate(order.updatedAt instanceof Date ? order.updatedAt : new Date(order.updatedAt)),
         estimatedDeliveryDate: order.estimatedDeliveryDate
           ? Timestamp.fromDate(order.estimatedDeliveryDate instanceof Date ? order.estimatedDeliveryDate : new Date(order.estimatedDeliveryDate))
           : null,
-      });
+      };
+
+      // Deep clean undefined values at all levels
+      const cleanOrderData = deepClean(orderData);
+
+      await setDoc(orderRef, cleanOrderData);
     } catch (error) {
       console.error('Error saving order to Firestore:', error);
       throw error;
