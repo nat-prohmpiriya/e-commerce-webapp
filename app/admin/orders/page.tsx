@@ -213,7 +213,9 @@ export default function AdminOrdersPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {order.createdAt instanceof Date
                           ? order.createdAt.toLocaleDateString()
-                          : new Date(order.createdAt).toLocaleDateString()}
+                          : (order.createdAt as any).toDate
+                          ? (order.createdAt as any).toDate().toLocaleDateString()
+                          : new Date(order.createdAt as any).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <button
