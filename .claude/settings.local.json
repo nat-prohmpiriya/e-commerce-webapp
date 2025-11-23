@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm uninstall:*)",
       "Bash(cat:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []
