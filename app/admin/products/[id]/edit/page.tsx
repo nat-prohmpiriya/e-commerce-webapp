@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useProduct } from '@/context/ProductContext';
+import { useCategory } from '@/context/CategoryContext';
 import AdminLayout from '@/components/admin/AdminLayout';
+import ImageUpload from '@/components/admin/ImageUpload';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { ProductColor } from '@/types';
 import toast from 'react-hot-toast';
@@ -14,6 +16,7 @@ export default function EditProductPage() {
   const params = useParams();
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { getProductById, updateProduct } = useProduct();
+  const { activeCategories, loading: categoriesLoading } = useCategory();
 
   const product = getProductById(params.id as string);
 
@@ -27,7 +30,7 @@ export default function EditProductPage() {
     isPublished: false,
   });
 
-  const [images, setImages] = useState<string[]>(['']);
+  const [images, setImages] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>(['']);
   const [colors, setColors] = useState<ProductColor[]>([{ name: '', hex: '#000000' }]);
   const [submitting, setSubmitting] = useState(false);
@@ -45,7 +48,7 @@ export default function EditProductPage() {
         stock: product.stock.toString(),
         isPublished: product.isPublished,
       });
-      setImages(product.images.length > 0 ? product.images : ['']);
+      setImages(product.images.length > 0 ? product.images : []);
       setSizes(product.sizes.length > 0 ? product.sizes : ['']);
       setColors(product.colors.length > 0 ? product.colors : [{ name: '', hex: '#000000' }]);
       setLoaded(true);
@@ -86,11 +89,10 @@ export default function EditProductPage() {
     }
 
     // Filter out empty values
-    const validImages = images.filter(img => img.trim() !== '');
     const validSizes = sizes.filter(size => size.trim() !== '');
     const validColors = colors.filter(color => color.name.trim() !== '');
 
-    if (validImages.length === 0) {
+    if (images.length === 0) {
       toast.error('Please add at least one product image');
       return;
     }
@@ -104,7 +106,7 @@ export default function EditProductPage() {
         category: formData.category,
         price: parseFloat(formData.price),
         salePrice: formData.salePrice ? parseFloat(formData.salePrice) : undefined,
-        images: validImages,
+        images: images,
         sizes: validSizes.length > 0 ? validSizes : ['One Size'],
         colors: validColors.length > 0 ? validColors : [{ name: 'Default', hex: '#000000' }],
         stock: parseInt(formData.stock),
@@ -119,14 +121,6 @@ export default function EditProductPage() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const addImageField = () => setImages([...images, '']);
-  const removeImageField = (index: number) => setImages(images.filter((_, i) => i !== index));
-  const updateImage = (index: number, value: string) => {
-    const newImages = [...images];
-    newImages[index] = value;
-    setImages(newImages);
   };
 
   const addSizeField = () => setSizes([...sizes, '']);
@@ -204,13 +198,22 @@ export default function EditProductPage() {
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 required
+                disabled={categoriesLoading}
               >
-                <option value="">Select category</option>
-                <option value="Dress">Dress</option>
-                <option value="T-Shirt">T-Shirt</option>
-                <option value="Pants">Pants</option>
-                <option value="Accessories">Accessories</option>
+                <option value="">
+                  {categoriesLoading ? 'Loading categories...' : 'Select category'}
+                </option>
+                {activeCategories.map((category) => (
+                  <option key={category.id} value={category.slug}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
+              {activeCategories.length === 0 && !categoriesLoading && (
+                <p className="text-xs text-red-500 mt-1">
+                  No categories available. Please create one first.
+                </p>
+              )}
             </div>
           </div>
 
@@ -266,40 +269,12 @@ export default function EditProductPage() {
 
           {/* Images */}
           <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Product Images</h2>
-              <button
-                type="button"
-                onClick={addImageField}
-                className="flex items-center gap-2 text-sm text-black hover:text-gray-700"
-              >
-                <Plus size={16} />
-                Add Image
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {images.map((image, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => updateImage(index, e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="Enter image URL"
-                  />
-                  {images.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeImageField(index)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                    >
-                      <X size={20} />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Product Images</h2>
+            <ImageUpload
+              images={images}
+              onImagesChange={setImages}
+              maxImages={5}
+            />
           </div>
 
           {/* Sizes */}
