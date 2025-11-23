@@ -41,7 +41,7 @@ export default function BottomNav() {
         },
     ];
 
-    if (pathname !== '/') {
+    if (pathname !== '/' && pathname !== '/account' && pathname !== '/favorites') {
         return null;
     }
 

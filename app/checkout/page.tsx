@@ -1,14 +1,17 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronDown, Menu } from 'lucide-react';
+import { ChevronLeft, ChevronDown, Menu, MapPin, Plus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useAddress } from '@/context/AddressContext';
 import Image from 'next/image';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, getCartTotal, getCartItemCount } = useCart();
+  const { addresses, getSelectedAddress, selectAddress } = useAddress();
 
+  const selectedAddress = getSelectedAddress();
   const subtotal = getCartTotal();
   const shippingFee = 0.00;
   const discount = 0.00;
@@ -16,8 +19,23 @@ export default function CheckoutPage() {
   const totalItems = getCartItemCount();
 
   const handlePayment = () => {
+    if (!selectedAddress) {
+      alert('Please select a shipping address');
+      return;
+    }
     // TODO: Implement payment processing
     alert('Payment processing will be implemented with Stripe');
+  };
+
+  const handleAddressClick = () => {
+    // TODO: Open address selector modal or navigate to address selection page
+    if (addresses.length === 0) {
+      alert('Please add a shipping address first');
+      // In future: router.push('/account/addresses/new');
+    } else {
+      alert('Address selector will be implemented');
+      // In future: Open modal to select from existing addresses
+    }
   };
 
   if (cart.length === 0) {
@@ -91,9 +109,49 @@ export default function CheckoutPage() {
           })}
         </div>
 
-        {/* Shipping Information */}
+        {/* Shipping Address */}
         <div className="bg-white rounded-2xl p-4">
-          <h2 className="font-semibold text-gray-900 mb-3">Shipping Information</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">Shipping Address</h2>
+          {selectedAddress ? (
+            <button
+              onClick={handleAddressClick}
+              className="w-full flex items-start gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-left"
+            >
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <MapPin size={20} className="text-green-600" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-gray-900 text-sm mb-1">
+                  {selectedAddress.fullName}
+                </p>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  {selectedAddress.addressLine1}
+                  {selectedAddress.addressLine2 && `, ${selectedAddress.addressLine2}`}
+                  <br />
+                  {selectedAddress.city}, {selectedAddress.state} {selectedAddress.postalCode}
+                  <br />
+                  {selectedAddress.country}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {selectedAddress.phoneNumber}
+                </p>
+              </div>
+              <ChevronDown size={20} className="text-gray-400 flex-shrink-0 mt-1" />
+            </button>
+          ) : (
+            <button
+              onClick={handleAddressClick}
+              className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-50 transition-colors"
+            >
+              <Plus size={20} className="text-gray-400" />
+              <span className="text-sm font-medium text-gray-600">Add Shipping Address</span>
+            </button>
+          )}
+        </div>
+
+        {/* Payment Method */}
+        <div className="bg-white rounded-2xl p-4">
+          <h2 className="font-semibold text-gray-900 mb-3">Payment Method</h2>
           <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
             <div className="flex items-center gap-3">
               <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">

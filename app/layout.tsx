@@ -5,6 +5,7 @@ import LayoutApp from "@/components/layout/LayoutApp";
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
+import { AddressProvider } from '@/context/AddressContext';
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -27,9 +28,11 @@ export default function RootLayout({
 				<AuthProvider>
 					<CartProvider>
 						<WishlistProvider>
-							<LayoutApp>
-								{children}
-							</LayoutApp>
+							<AddressProvider>
+								<LayoutApp>
+									{children}
+								</LayoutApp>
+							</AddressProvider>
 						</WishlistProvider>
 					</CartProvider>
 				</AuthProvider>
