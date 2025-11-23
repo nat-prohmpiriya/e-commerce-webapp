@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-Commerce Web App
+
+Modern shopping platform for small businesses built with Next.js 16, TypeScript, Tailwind CSS, Ant Design, and Firebase.
+
+## Tech Stack
+
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS v4, Ant Design
+- **Backend**: Firebase (Auth, Firestore, Storage)
+- **Payment**: Stripe
+- **Deployment**: Firebase Hosting
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- npm or yarn
+- Firebase account
+- Stripe account (for payment integration)
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd ecommerce-webapp
+```
+
+2. Install dependencies
+```bash
+npm install --legacy-peer-deps
+```
+
+3. Set up environment variables
+
+Copy `.env.example` to `.env.local` and fill in your credentials:
+
+```bash
+cp .env.example .env.local
+```
+
+Required environment variables:
+- Firebase configuration (API key, project ID, etc.)
+- Stripe keys (publishable and secret)
+- Admin emails
+
+### Firebase Setup
+
+1. Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable Authentication (Email/Password and Google)
+3. Create a Firestore database
+4. Enable Firebase Storage
+5. Copy your Firebase config to `.env.local`
+
+### Development
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### Deploy
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+firebase deploy
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+├── app/                  # Next.js 16 App Router pages
+├── components/          # Reusable React components
+├── context/            # React Context providers
+│   ├── AuthContext.tsx
+│   ├── CartContext.tsx
+│   └── WishlistContext.tsx
+├── lib/                # Utilities and helpers
+│   └── firebase.ts
+├── types/              # TypeScript type definitions
+│   └── index.ts
+├── public/             # Static assets
+└── .docs/              # Documentation
+    ├── 01-spec.md      # Project specification
+    └── 02-todos.md     # Development todos
+```
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Phase 1: MVP
+- ✅ User authentication (Email/Password, Google OAuth)
+- ✅ Product catalog with filtering
+- ✅ Product detail page
+- ✅ Shopping cart
+- ✅ Wishlist/Favorites
+- 🚧 Checkout process
+- 🚧 Order management
+- 🚧 Responsive design (mobile + desktop)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Phase 2: Enhanced Features
+- ⏳ Payment gateway integration (Stripe)
+- ⏳ User profile and order history
+- ⏳ Email notifications
+- ⏳ Admin dashboard
+
+### Phase 3: Optimization
+- ⏳ Performance optimization
+- ⏳ SEO optimization
+- ⏳ Analytics and reporting
+
+## Documentation
+
+- [Project Specification](.docs/01-spec.md)
+- [Development Todos](.docs/02-todos.md)
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Test thoroughly
+4. Submit a pull request
+
+## License
+
+Private project for small business use.
