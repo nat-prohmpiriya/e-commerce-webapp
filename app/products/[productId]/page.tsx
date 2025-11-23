@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ChevronLeft, Heart, Minus, Plus, ShoppingCart } from 'lucide-react';
-import products from '@/data/products';
+import { useProduct } from '@/context/ProductContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
 import toast from 'react-hot-toast';
@@ -14,19 +14,64 @@ export default function ProductDetailPage() {
     const router = useRouter();
     const productId = params.productId as string;
 
-    const product = products.find(p => p.id === productId);
+    const { getProductById, loading } = useProduct();
+    const product = getProductById(productId);
     const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
     const { addToCart } = useCart();
 
-    const [selectedSize, setSelectedSize] = useState(product?.sizes[2] || 'L');
-    const [selectedColor, setSelectedColor] = useState(product?.colors[0] || null);
+    const [selectedSize, setSelectedSize] = useState('');
+    const [selectedColor, setSelectedColor] = useState<{ name: string; hex: string } | null>(null);
     const [quantity, setQuantity] = useState(1);
     const [showFullDescription, setShowFullDescription] = useState(false);
+
+    // Initialize selections when product loads
+    useEffect(() => {
+        if (product) {
+            setSelectedSize(product.sizes[2] || product.sizes[0] || '');
+            setSelectedColor(product.colors[0] || null);
+        }
+    }, [product]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4"></div>
+                    <p className="text-gray-500">Loading product...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (!product) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500">Product not found</p>
+                <div className="text-center">
+                    <p className="text-gray-500 mb-4">Product not found</p>
+                    <button
+                        onClick={() => router.push('/')}
+                        className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800"
+                    >
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // Check if product is not published
+    if (!product.isPublished) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-gray-500 mb-4">This product is not available</p>
+                    <button
+                        onClick={() => router.push('/')}
+                        className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800"
+                    >
+                        Back to Home
+                    </button>
+                </div>
             </div>
         );
     }
