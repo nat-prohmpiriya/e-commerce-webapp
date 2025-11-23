@@ -14,6 +14,7 @@ import {
   X,
   LogOut,
   ChevronRight,
+  FolderOpen,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -31,6 +32,11 @@ const navigation = [
     name: 'Products',
     href: '/admin/products',
     icon: Package,
+  },
+  {
+    name: 'Categories',
+    href: '/admin/categories',
+    icon: FolderOpen,
   },
   {
     name: 'Orders',
@@ -108,7 +114,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* Navigation */}
           <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
+              // Fix: Dashboard should only match exact path, not sub-paths
+              const isActive = item.href === '/admin'
+                ? pathname === '/admin'
+                : pathname === item.href || pathname?.startsWith(item.href + '/');
               const Icon = item.icon;
 
               return (
