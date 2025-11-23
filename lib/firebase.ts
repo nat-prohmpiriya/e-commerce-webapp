@@ -16,6 +16,8 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
+const dbName = process.env.NEXT_PUBLIC_FIREBASE_DB_NAME || 'default_db';
+
 // Initialize Firebase app (singleton pattern)
 let app: FirebaseApp;
 let auth: Auth;
@@ -25,12 +27,12 @@ let storage: FirebaseStorage;
 if (getApps().length === 0) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
-  db = getFirestore(app, 'ecommerce-app');
+  db = getFirestore(app, dbName);
   storage = getStorage(app);
 } else {
   app = getApps()[0];
   auth = getAuth(app);
-  db = getFirestore(app);
+  db = getFirestore(app, dbName);
   storage = getStorage(app);
 }
 
