@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import products from '@/data/products';
 import Image from 'next/image';
 import { Heart, ShoppingCart } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function FavoritesPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function FavoritesPage() {
 
   const handleRemoveFromWishlist = (productId: string) => {
     removeFromWishlist(productId);
+    toast.success('Removed from favorites');
   };
 
   const handleAddToCart = (product: typeof products[0]) => {
@@ -32,7 +34,7 @@ export default function FavoritesPage() {
       price: product.price,
       salePrice: product.salePrice
     });
-    alert('Added to cart!');
+    toast.success('Added to cart!');
   };
 
   return (

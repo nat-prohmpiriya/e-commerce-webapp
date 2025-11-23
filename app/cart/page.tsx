@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import CartItemCard from '@/components/CartItemCard';
+import toast from 'react-hot-toast';
 
 export default function CartPage() {
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     if (selectedCount === 0) {
-      alert('Please select at least one item to checkout');
+      toast.error('Please select at least one item to checkout');
       return;
     }
     router.push('/checkout');

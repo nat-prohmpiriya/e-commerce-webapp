@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronDown, Menu, MapPin, Plus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAddress } from '@/context/AddressContext';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -20,20 +21,22 @@ export default function CheckoutPage() {
 
   const handlePayment = () => {
     if (!selectedAddress) {
-      alert('Please select a shipping address');
+      toast.error('Please select a shipping address');
       return;
     }
     // TODO: Implement payment processing
-    alert('Payment processing will be implemented with Stripe');
+    toast.success('Payment processing will be implemented with Stripe');
   };
 
   const handleAddressClick = () => {
     // TODO: Open address selector modal or navigate to address selection page
     if (addresses.length === 0) {
-      alert('Please add a shipping address first');
+      toast.error('Please add a shipping address first');
       // In future: router.push('/account/addresses/new');
     } else {
-      alert('Address selector will be implemented');
+      toast('Address selector will be implemented', {
+        icon: 'ℹ️',
+      });
       // In future: Open modal to select from existing addresses
     }
   };

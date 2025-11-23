@@ -13,6 +13,7 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AccountPage() {
   const { user, signOut } = useAuth();
@@ -21,10 +22,11 @@ export default function AccountPage() {
   const handleSignOut = async () => {
     try {
       await signOut();
+      toast.success('Signed out successfully');
       router.push('/');
     } catch (error) {
       console.error('Error signing out:', error);
-      alert('Failed to sign out. Please try again.');
+      toast.error('Failed to sign out. Please try again.');
     }
   };
 

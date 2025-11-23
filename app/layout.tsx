@@ -6,6 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { AddressProvider } from '@/context/AddressContext';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -32,6 +33,31 @@ export default function RootLayout({
 								<LayoutApp>
 									{children}
 								</LayoutApp>
+								<Toaster
+									position="top-center"
+									reverseOrder={false}
+									toastOptions={{
+										duration: 3000,
+										style: {
+											background: '#363636',
+											color: '#fff',
+											borderRadius: '12px',
+											padding: '12px 20px',
+										},
+										success: {
+											iconTheme: {
+												primary: '#10b981',
+												secondary: '#fff',
+											},
+										},
+										error: {
+											iconTheme: {
+												primary: '#ef4444',
+												secondary: '#fff',
+											},
+										},
+									}}
+								/>
 							</AddressProvider>
 						</WishlistProvider>
 					</CartProvider>

@@ -7,6 +7,7 @@ import { ChevronLeft, Heart, Minus, Plus, ShoppingCart } from 'lucide-react';
 import products from '@/data/products';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
+import toast from 'react-hot-toast';
 
 export default function ProductDetailPage() {
     const params = useParams();
@@ -50,7 +51,10 @@ export default function ProductDetailPage() {
     };
 
     const handleAddToCart = () => {
-        if (!selectedColor) return;
+        if (!selectedColor) {
+            toast.error('Please select a color');
+            return;
+        }
 
         addToCart({
             productId: product.id,
@@ -63,8 +67,7 @@ export default function ProductDetailPage() {
             salePrice: product.salePrice
         });
 
-        // Show success feedback (you can add a toast notification here)
-        alert('Added to cart!');
+        toast.success(`Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`);
     };
 
     return (
