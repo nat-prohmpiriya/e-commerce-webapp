@@ -7,9 +7,12 @@ import ProductCard from '@/components/ProductCard';
 import FilterSheet, { FilterOptions } from '@/components/FilterSheet';
 import { useProduct } from '@/context/ProductContext';
 import { useCategory } from '@/context/CategoryContext';
+import { useLocale } from 'next-intl';
+import { getProductName, getProductCategory, getCategoryName, type Locale } from '@/utils/localization';
 import { Package } from 'lucide-react';
 
 export default function HomePage() {
+  const locale = useLocale() as Locale;
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { products, loading: productsLoading } = useProduct();
@@ -37,11 +40,12 @@ export default function HomePage() {
     const category = categories.find(cat => cat.slug === selectedCategory);
     if (!category) return [];
 
-    // Filter products by category name (since product.category stores the name, not slug)
+    // Filter products by category - match using localized category name
+    const categoryNameInLocale = getCategoryName(category, locale);
     return publishedProducts.filter(
-      product => product.category.toLowerCase() === category.name.toLowerCase()
+      product => getProductCategory(product, locale).toLowerCase() === categoryNameInLocale.toLowerCase()
     );
-  }, [publishedProducts, selectedCategory, categories]);
+  }, [publishedProducts, selectedCategory, categories, locale]);
 
   // Apply all filters from FilterSheet
   const filteredProducts = useMemo(() => {
@@ -55,11 +59,16 @@ export default function HomePage() {
       }
     );
 
-    // Filter by categories (from FilterSheet)
+    // Filter by categories (from FilterSheet using slugs)
     if (filters.selectedCategories.length > 0) {
-      result = result.filter(
-        product => filters.selectedCategories.includes(product.category)
-      );
+      result = result.filter(product => {
+        // Find the category that matches the product's category name
+        const productCategoryName = getProductCategory(product, locale);
+        const matchingCategory = categories.find(
+          cat => getCategoryName(cat, locale).toLowerCase() === productCategoryName.toLowerCase()
+        );
+        return matchingCategory && filters.selectedCategories.includes(matchingCategory.slug);
+      });
     }
 
     // Filter by stock
@@ -76,10 +85,10 @@ export default function HomePage() {
         result.sort((a, b) => (b.salePrice || b.price) - (a.salePrice || a.price));
         break;
       case 'name-asc':
-        result.sort((a, b) => a.name.localeCompare(b.name));
+        result.sort((a, b) => getProductName(a, locale).localeCompare(getProductName(b, locale)));
         break;
       case 'name-desc':
-        result.sort((a, b) => b.name.localeCompare(a.name));
+        result.sort((a, b) => getProductName(b, locale).localeCompare(getProductName(a, locale)));
         break;
       case 'newest':
         result.sort((a, b) => {
@@ -91,7 +100,7 @@ export default function HomePage() {
     }
 
     return result;
-  }, [categoryFilteredProducts, filters]);
+  }, [categoryFilteredProducts, filters, locale, categories]);
 
   const loading = productsLoading;
 

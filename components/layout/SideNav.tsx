@@ -21,7 +21,7 @@ export default function SideNav() {
     const { getWishlistCount } = useWishlist();
 
     // Don't show SideNav on admin pages
-    if (pathname.startsWith('/admin')) {
+    if (pathname.includes('/admin')) {
         return null;
     }
 

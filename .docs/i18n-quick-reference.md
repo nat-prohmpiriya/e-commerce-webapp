@@ -21,7 +21,7 @@
 ```bash
 # 1. สร้าง folder
 mkdir -p app/[locale]
-
+`
 # 2. ย้ายไฟล์
 mv app/page.tsx app/[locale]/page.tsx
 mv app/products app/[locale]/products

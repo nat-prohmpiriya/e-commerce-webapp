@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useCategory } from '@/context/CategoryContext';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { getCategoryName, type Locale } from '@/utils/localization';
 
 export interface FilterOptions {
   priceRange: [number, number];
@@ -21,6 +22,7 @@ interface FilterSheetProps {
 
 export default function FilterSheet({ isOpen, onClose, onApply, initialFilters }: FilterSheetProps) {
   const { activeCategories } = useCategory();
+  const locale = useLocale() as Locale;
   const t = useTranslations('Filter');
   const [filters, setFilters] = useState<FilterOptions>(initialFilters);
 
@@ -149,18 +151,21 @@ export default function FilterSheet({ isOpen, onClose, onApply, initialFilters }
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">{t('categories')}</h3>
             <div className="flex flex-wrap gap-2">
-              {activeCategories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => toggleCategory(category.name)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filters.selectedCategories.includes(category.name)
-                    ? 'bg-black text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                >
-                  {category.name}
-                </button>
-              ))}
+              {activeCategories.map((category) => {
+                const categoryName = getCategoryName(category, locale);
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => toggleCategory(category.slug)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filters.selectedCategories.includes(category.slug)
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                  >
+                    {categoryName}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
