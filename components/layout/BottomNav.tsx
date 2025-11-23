@@ -4,10 +4,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Bell, ShoppingBag, Heart, User, Home } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useAuth } from '@/context/AuthContext';
+import toast from 'react-hot-toast';
 
 export default function BottomNav() {
     const router = useRouter();
     const pathname = usePathname();
+    const { user } = useAuth();
     const { getCartItemCount } = useCart();
     const { getWishlistCount } = useWishlist();
 
@@ -19,27 +22,40 @@ export default function BottomNav() {
             icon: Home,
             label: 'Home',
             path: '/',
-            badge: 0
+            badge: 0,
+            requireAuth: false
         },
         {
             icon: ShoppingBag,
             label: 'Cart',
             path: '/cart',
-            badge: cartCount
+            badge: cartCount,
+            requireAuth: false
         },
         {
             icon: Heart,
             label: 'Favorites',
             path: '/favorites',
-            badge: wishlistCount
+            badge: wishlistCount,
+            requireAuth: true
         },
         {
             icon: User,
             label: 'Account',
             path: '/account',
-            badge: 0
+            badge: 0,
+            requireAuth: true
         },
     ];
+
+    const handleNavClick = (item: typeof navItems[0]) => {
+        if (item.requireAuth && !user) {
+            toast.error('Please sign in to access this feature');
+            router.push('/login');
+            return;
+        }
+        router.push(item.path);
+    };
 
     if (pathname !== '/' && pathname !== '/account' && pathname !== '/favorites') {
         return null;
@@ -57,7 +73,7 @@ export default function BottomNav() {
                             <div className='' key={item.path}>
                                 <button
                                     key={item.path}
-                                    onClick={() => router.push(item.path)}
+                                    onClick={() => handleNavClick(item)}
                                     className={`flex flex-col items-center justify-center relative transition-colors ${isActive ? 'text-white' : 'text-gray-400'
                                         }`}
                                 >

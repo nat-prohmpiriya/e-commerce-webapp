@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithEmail, signInWithGoogle, resetPassword } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +24,7 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await signInWithEmail(email, password);
+      await signIn(email, password);
       toast.success('Welcome back!');
       router.push('/');
     } catch (error: any) {
@@ -61,34 +61,17 @@ export default function LoginPage() {
     router.push('/');
   };
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      toast.error('Please enter your email address first');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await resetPassword(email);
-      toast.success('Password reset email sent! Check your inbox.');
-    } catch (error: any) {
-      console.error('Reset password error:', error);
-      if (error.code === 'auth/user-not-found') {
-        toast.error('No account found with this email');
-      } else if (error.code === 'auth/invalid-email') {
-        toast.error('Invalid email address');
-      } else {
-        toast.error('Failed to send reset email. Please try again.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <div className="px-6 pt-12 pb-8">
+        <button
+          onClick={() => router.back()}
+          className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft size={20} />
+          <span className="text-sm font-medium">Back</span>
+        </button>
         <h1 className="text-3xl font-bold text-gray-900">Login</h1>
       </div>
 
@@ -146,7 +129,7 @@ export default function LoginPage() {
           <div className="text-right">
             <button
               type="button"
-              onClick={handleForgotPassword}
+              onClick={() => router.push('/forgot-password')}
               disabled={loading}
               className="text-sm text-gray-600 hover:text-gray-900 hover:underline disabled:opacity-50"
             >

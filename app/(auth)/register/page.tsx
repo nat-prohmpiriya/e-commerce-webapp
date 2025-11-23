@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { signUpWithEmail, signInWithGoogle } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,7 +36,8 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await signUpWithEmail(email, password);
+      const displayName = email.split('@')[0];
+      await signUp(email, password, displayName);
       toast.success('Account created successfully!');
       router.push('/');
     } catch (error: any) {
@@ -73,6 +74,13 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <div className="px-6 pt-12 pb-8">
+        <button
+          onClick={() => router.back()}
+          className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft size={20} />
+          <span className="text-sm font-medium">Back</span>
+        </button>
         <h1 className="text-3xl font-bold text-gray-900">Register</h1>
       </div>
 
