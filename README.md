@@ -14,6 +14,8 @@ A full-stack, production-ready e-commerce platform built with Next.js 16, TypeSc
 
 **🌐 Languages:** **English** | [ไทย](README.th.md)
 
+**🤖 Built with:** [Claude Code](https://claude.com/claude-code) - AI-powered development assistant
+
 </div>
 
 ---
@@ -971,6 +973,7 @@ This project demonstrates:
 ✅ **Performance** - Optimized for Core Web Vitals
 ✅ **Security** - Best practices for web security
 ✅ **DevOps** - CI/CD with automatic deployment
+✅ **AI-Assisted Development** - Built with Claude Code for efficient development
 
 ---
 
