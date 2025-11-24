@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronDown, Menu, MapPin, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronDown, Menu, MapPin, Plus, Tag, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAddress } from '@/context/AddressContext';
 import { useOrder } from '@/context/OrderContext';
-import { OrderItem } from '@/types';
+import { useDiscount } from '@/context/DiscountContext';
+import { OrderItem, DiscountCode } from '@/types';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
@@ -21,17 +22,63 @@ export default function CheckoutPage() {
   const tCart = useTranslations('Cart');
   const router = useRouter();
   const { cart, getCartTotal, getCartItemCount, clearCart } = useCart();
-  const { addresses, getSelectedAddress, selectAddress } = useAddress();
+  const { addresses, getSelectedAddress } = useAddress();
   const { createOrder } = useOrder();
+  const { validateDiscount } = useDiscount();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [discountCode, setDiscountCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode | null>(null);
+  const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
 
   const selectedAddress = getSelectedAddress();
   const subtotal = getCartTotal();
   const shippingFee = 0.00;
-  const discount = 0.00;
-  const total = subtotal + shippingFee - discount;
+
+  // Calculate discount amount
+  let discountAmount = 0;
+  if (appliedDiscount) {
+    if (appliedDiscount.type === 'percentage') {
+      discountAmount = (subtotal * appliedDiscount.value) / 100;
+      if (appliedDiscount.maxDiscountAmount) {
+        discountAmount = Math.min(discountAmount, appliedDiscount.maxDiscountAmount);
+      }
+    } else {
+      discountAmount = appliedDiscount.value;
+    }
+  }
+
+  const total = subtotal + shippingFee - discountAmount;
   const totalItems = getCartItemCount();
+
+  const handleApplyDiscount = async () => {
+    if (!discountCode.trim()) {
+      toast.error('Please enter a discount code');
+      return;
+    }
+
+    setIsApplyingDiscount(true);
+    try {
+      const result = await validateDiscount(discountCode.trim(), subtotal);
+
+      if (result.valid && result.discount) {
+        setAppliedDiscount(result.discount);
+        toast.success(`Discount code "${discountCode}" applied successfully!`);
+        setDiscountCode('');
+      } else {
+        toast.error(result.error || 'Invalid discount code');
+      }
+    } catch (error) {
+      toast.error('Failed to apply discount code');
+    } finally {
+      setIsApplyingDiscount(false);
+    }
+  };
+
+  const handleRemoveDiscount = () => {
+    setAppliedDiscount(null);
+    toast.success('Discount code removed');
+  };
 
   const handlePaymentClick = () => {
     if (!selectedAddress) {
@@ -42,6 +89,11 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentSuccess = async () => {
+    if (!selectedAddress) {
+      toast.error(t('selectAddress'));
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
@@ -63,7 +115,7 @@ export default function CheckoutPage() {
         items: orderItems,
         subtotal,
         shipping: shippingFee,
-        discount,
+        discount: discountAmount,
         total,
         shippingAddress: {
           fullName: selectedAddress.fullName,
@@ -80,6 +132,7 @@ export default function CheckoutPage() {
           cardBrand: 'stripe',
           last4: '****',
         },
+        discountCode: appliedDiscount?.code,
       });
 
       // Clear cart
@@ -221,6 +274,50 @@ export default function CheckoutPage() {
           )}
         </div>
 
+        {/* Discount Code */}
+        <div className="bg-white rounded-2xl p-4">
+          <h2 className="font-semibold text-gray-900 mb-3">Discount Code</h2>
+          {appliedDiscount ? (
+            <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-xl">
+              <div className="flex items-center gap-2">
+                <Tag className="w-5 h-5 text-green-600" />
+                <div>
+                  <p className="font-semibold text-green-900">{appliedDiscount.code}</p>
+                  <p className="text-xs text-green-700">
+                    {appliedDiscount.type === 'percentage'
+                      ? `${appliedDiscount.value}% off`
+                      : `$${appliedDiscount.value.toFixed(2)} off`}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleRemoveDiscount}
+                className="p-1 hover:bg-green-100 rounded-full transition-colors"
+              >
+                <X className="w-4 h-4 text-green-700" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                placeholder="Enter code"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent"
+                onKeyPress={(e) => e.key === 'Enter' && handleApplyDiscount()}
+              />
+              <button
+                onClick={handleApplyDiscount}
+                disabled={isApplyingDiscount || !discountCode.trim()}
+                className="px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              >
+                {isApplyingDiscount ? 'Applying...' : 'Apply'}
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* Price Breakdown */}
         <div className="bg-white rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between text-sm">
@@ -231,10 +328,12 @@ export default function CheckoutPage() {
             <span className="text-gray-600">{t('shippingFee')}</span>
             <span className="font-semibold text-gray-900">${shippingFee.toFixed(2)}</span>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">{t('discount')}</span>
-            <span className="font-semibold text-gray-900">${discount.toFixed(2)}</span>
-          </div>
+          {discountAmount > 0 && (
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-green-600">Discount ({appliedDiscount?.code})</span>
+              <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)}</span>
+            </div>
+          )}
           <div className="border-t border-gray-200 pt-3">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-gray-900">{t('subTotal')}</span>

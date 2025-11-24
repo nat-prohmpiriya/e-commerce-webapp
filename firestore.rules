@@ -1,0 +1,122 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isAdminOrOwner(userId) {
+      return isAdmin() || isOwner(userId);
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Anyone can read user profiles (for reviews, etc.)
+      allow read: if true;
+
+      // Users can create their own profile
+      allow create: if isOwner(userId);
+
+      // Users can update their own profile, admins can update any
+      allow update: if isAdminOrOwner(userId);
+
+      // Only admins can delete users
+      allow delete: if isAdmin();
+    }
+
+    // Products collection
+    match /products/{productId} {
+      // Anyone can read published products
+      allow read: if resource.data.isPublished == true || isAdmin();
+
+      // Only admins can create, update, or delete products
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Categories collection
+    match /categories/{categoryId} {
+      // Anyone can read active categories
+      allow read: if resource.data.isActive == true || isAdmin();
+
+      // Only admins can create, update, or delete categories
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Cart collection
+    match /carts/{userId} {
+      // Users can only access their own cart
+      allow read, write: if isOwner(userId);
+    }
+
+    // Wishlist collection
+    match /wishlists/{userId} {
+      // Users can only access their own wishlist
+      allow read, write: if isOwner(userId);
+    }
+
+    // Orders collection
+    match /orders/{orderId} {
+      // Users can read their own orders, admins can read all
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+
+      // Users can create their own orders
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+
+      // Only admins can update orders (status changes)
+      allow update: if isAdmin();
+
+      // Only admins can delete orders
+      allow delete: if isAdmin();
+    }
+
+    // Reviews collection
+    match /reviews/{reviewId} {
+      // Anyone can read reviews
+      allow read: if true;
+
+      // Authenticated users can create reviews
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+
+      // Users can update their own reviews, admins can update any
+      allow update: if isOwner(resource.data.userId) || isAdmin();
+
+      // Users can delete their own reviews, admins can delete any
+      allow delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // Discount codes collection
+    match /discounts/{discountId} {
+      // Anyone can read active discounts
+      allow read: if resource.data.isActive == true || isAdmin();
+
+      // Only admins can create, update, or delete discounts
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Store settings collection
+    match /storeSettings/{settingId} {
+      // Anyone can read store settings
+      allow read: if true;
+
+      // Only admins can update store settings
+      allow write: if isAdmin();
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
