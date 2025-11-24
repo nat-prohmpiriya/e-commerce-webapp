@@ -133,8 +133,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     setSidebarOpen(false);
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
-                      ? 'bg-black text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-black text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
                     }`}
                 >
                   <Icon size={20} />
@@ -182,7 +182,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="">
         {/* Top bar */}
         <header className="bg-white border-b sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 lg:px-8 py-4">

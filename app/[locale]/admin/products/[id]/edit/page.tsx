@@ -10,11 +10,12 @@ import ImageUpload from '@/components/admin/ImageUpload';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { ProductColor } from '@/types';
 import toast from 'react-hot-toast';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
+  const locale = useLocale();
   const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { getProductById, updateProduct } = useProduct();
@@ -23,8 +24,10 @@ export default function EditProductPage() {
   const product = getProductById(params.id as string);
 
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name_th: '',
+    name_en: '',
+    description_th: '',
+    description_en: '',
     category: '',
     price: '',
     salePrice: '',
@@ -42,8 +45,10 @@ export default function EditProductPage() {
   useEffect(() => {
     if (product && !loaded) {
       setFormData({
-        name: product.name || product.name_en || product.name_th || '',
-        description: product.description || product.description_en || product.description_th || '',
+        name_th: product.name_th || product.name || '',
+        name_en: product.name_en || product.name || '',
+        description_th: product.description_th || product.description || '',
+        description_en: product.description_en || product.description || '',
         category: product.category || product.category_en || product.category_th || '',
         price: product.price.toString(),
         salePrice: product.salePrice?.toString() || '',
@@ -85,7 +90,7 @@ export default function EditProductPage() {
     e.preventDefault();
 
     // Validation
-    if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.stock) {
+    if (!formData.name_th || !formData.name_en || !formData.description_th || !formData.description_en || !formData.category || !formData.price || !formData.stock) {
       toast.error(t('fillRequiredFields'));
       return;
     }
@@ -95,7 +100,7 @@ export default function EditProductPage() {
     const validColors = colors.filter(color => color.name.trim() !== '');
 
     if (images.length === 0) {
-      toast.error(t('addProductImage'));
+      toast.error(t('addAtLeastOneImage'));
       return;
     }
 
@@ -103,11 +108,10 @@ export default function EditProductPage() {
 
     try {
       await updateProduct(product.id, {
-        // Use same value for both languages for now
-        name_th: formData.name,
-        name_en: formData.name,
-        description_th: formData.description,
-        description_en: formData.description,
+        name_th: formData.name_th,
+        name_en: formData.name_en,
+        description_th: formData.description_th,
+        description_en: formData.description_en,
         category_th: formData.category,
         category_en: formData.category,
         price: parseFloat(formData.price),
@@ -169,28 +173,56 @@ export default function EditProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product Name <span className="text-red-500">*</span>
+                Product Name (Thai) <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.name_th}
+                onChange={(e) => setFormData({ ...formData, name_th: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Enter product name"
+                placeholder="ชื่อสินค้า"
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description <span className="text-red-500">*</span>
+                Product Name (English) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name_en}
+                onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Product name"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (Thai) <span className="text-red-500">*</span>
               </label>
               <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                value={formData.description_th}
+                onChange={(e) => setFormData({ ...formData, description_th: e.target.value })}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Enter product description"
+                placeholder="รายละเอียดสินค้า"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (English) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={formData.description_en}
+                onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Product description"
                 required
               />
             </div>
@@ -211,7 +243,7 @@ export default function EditProductPage() {
                 </option>
                 {activeCategories.map((category) => (
                   <option key={category.id} value={category.slug}>
-                    {category.name}
+                    {locale === 'th' ? (category.name_th || category.name) : (category.name_en || category.name)}
                   </option>
                 ))}
               </select>

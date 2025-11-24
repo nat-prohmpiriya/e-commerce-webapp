@@ -20,7 +20,7 @@ const LayoutApp = ({ children }: LayoutAppProps) => {
 
             {/* Main Content */}
             <div className={isAdminPage ? 'min-h-screen' : 'md:ml-64 min-h-screen'}>
-                <div className={isAdminPage ? 'w-full' : 'max-w-7xl mx-auto'}>
+                <div className={isAdminPage ? 'w-full' : 'mx-auto max-w-7xl'}>
                     {children}
                 </div>
             </div>
