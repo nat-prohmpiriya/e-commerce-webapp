@@ -10,18 +10,21 @@ import ImageUpload from '@/components/admin/ImageUpload';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { ProductColor } from '@/types';
 import toast from 'react-hot-toast';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function NewProductPage() {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('Admin');
   const { loading: authLoading, isAdmin } = useAdminAuth();
   const { createProduct } = useProduct();
   const { activeCategories, loading: categoriesLoading } = useCategory();
 
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name_th: '',
+    name_en: '',
+    description_th: '',
+    description_en: '',
     category: '',
     price: '',
     salePrice: '',
@@ -46,7 +49,7 @@ export default function NewProductPage() {
     e.preventDefault();
 
     // Validation
-    if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.stock) {
+    if (!formData.name_th || !formData.name_en || !formData.description_th || !formData.description_en || !formData.category || !formData.price || !formData.stock) {
       toast.error(t('fillRequiredFields'));
       return;
     }
@@ -56,7 +59,7 @@ export default function NewProductPage() {
     const validColors = colors.filter(color => color.name.trim() !== '');
 
     if (images.length === 0) {
-      toast.error(t('addProductImage'));
+      toast.error(t('addAtLeastOneImage'));
       return;
     }
 
@@ -64,9 +67,12 @@ export default function NewProductPage() {
 
     try {
       await createProduct({
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
+        name_th: formData.name_th,
+        name_en: formData.name_en,
+        description_th: formData.description_th,
+        description_en: formData.description_en,
+        category_th: formData.category,
+        category_en: formData.category,
         price: parseFloat(formData.price),
         salePrice: formData.salePrice ? parseFloat(formData.salePrice) : undefined,
         images: images,
@@ -128,28 +134,56 @@ export default function NewProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('productName')} <span className="text-red-500">*</span>
+                Product Name (Thai) <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.name_th}
+                onChange={(e) => setFormData({ ...formData, name_th: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder={t('enterProductName')}
+                placeholder="ชื่อสินค้า"
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('description')} <span className="text-red-500">*</span>
+                Product Name (English) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name_en}
+                onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Product name"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (Thai) <span className="text-red-500">*</span>
               </label>
               <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                value={formData.description_th}
+                onChange={(e) => setFormData({ ...formData, description_th: e.target.value })}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder={t('enterProductDescription')}
+                placeholder="รายละเอียดสินค้า"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (English) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={formData.description_en}
+                onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Product description"
                 required
               />
             </div>
@@ -170,7 +204,7 @@ export default function NewProductPage() {
                 </option>
                 {activeCategories.map((category) => (
                   <option key={category.id} value={category.slug}>
-                    {category.name}
+                    {locale === 'th' ? (category.name_th || category.name) : (category.name_en || category.name)}
                   </option>
                 ))}
               </select>

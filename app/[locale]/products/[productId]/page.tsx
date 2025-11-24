@@ -189,20 +189,27 @@ export default function ProductDetailPage() {
 
                 {/* Description */}
                 <div className="mb-6">
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        {showFullDescription
-                            ? product.description
-                            : product.description.slice(0, 100)}
-                        {!showFullDescription && product.description.length > 100 && '...'}
-                    </p>
-                    {product.description.length > 100 && (
-                        <button
-                            onClick={() => setShowFullDescription(!showFullDescription)}
-                            className="text-sm font-semibold text-gray-900 mt-1"
-                        >
-                            {showFullDescription ? 'Read Less' : 'Read More...'}
-                        </button>
-                    )}
+                    {(() => {
+                        const description = product.description || product.description_en || product.description_th || '';
+                        return (
+                            <>
+                                <p className="text-gray-600 text-sm leading-relaxed">
+                                    {showFullDescription
+                                        ? description
+                                        : description.slice(0, 100)}
+                                    {!showFullDescription && description.length > 100 && '...'}
+                                </p>
+                                {description.length > 100 && (
+                                    <button
+                                        onClick={() => setShowFullDescription(!showFullDescription)}
+                                        className="text-sm font-semibold text-gray-900 mt-1"
+                                    >
+                                        {showFullDescription ? 'Read Less' : 'Read More...'}
+                                    </button>
+                                )}
+                            </>
+                        );
+                    })()}
                 </div>
 
                 {/* Size Selector */}

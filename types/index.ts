@@ -216,6 +216,8 @@ export interface Category {
   productCount: number;
   isActive: boolean;
   order?: number; // Display order
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 
   // Deprecated fields - keep for backward compatibility
   /** @deprecated Use name_th or name_en instead */

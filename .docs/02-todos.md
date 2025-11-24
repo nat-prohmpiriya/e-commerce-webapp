@@ -7,209 +7,209 @@ This document tracks all development tasks based on the specification in [01-spe
 ## Phase 1: Project Setup & Foundation
 
 ### 1. Initial Setup
-- [ ] Initialize Next.js 16+ project with TypeScript
-- [ ] Configure Tailwind CSS
+- [x] Initialize Next.js 16+ project with TypeScript
+- [x] Configure Tailwind CSS
 - [ ] Install and configure Ant Design
-- [ ] Set up project folder structure
-- [ ] Configure ESLint and Prettier
-- [ ] Set up Git repository and .gitignore
+- [x] Set up project folder structure
+- [x] Configure ESLint and Prettier
+- [x] Set up Git repository and .gitignore
 - [ ] Create environment variables template (.env.example)
 
 ### 2. Firebase Setup
-- [ ] Create Firebase project
-- [ ] Enable Firebase Authentication (Email/Password, Google OAuth)
-- [ ] Set up Firestore Database
-- [ ] Configure Firestore security rules
-- [ ] Set up Firebase Storage for product images
-- [ ] Configure Firebase in Next.js app
-- [ ] Create Firebase config file
+- [x] Create Firebase project
+- [x] Enable Firebase Authentication (Email/Password, Google OAuth)
+- [x] Set up Firestore Database
+- [ ] Configure Firestore security rules (needs review)
+- [x] Set up Firebase Storage for product images
+- [x] Configure Firebase in Next.js app
+- [x] Create Firebase config file
 - [ ] Set up Firebase Hosting
 
 ### 3. Project Architecture
-- [ ] Create folder structure:
-  - [ ] `/app` - Next.js 16 App Router pages
-  - [ ] `/components` - Reusable components
-  - [ ] `/lib` - Utilities and helpers
-  - [ ] `/hooks` - Custom React hooks
-  - [ ] `/context` - React Context providers
-  - [ ] `/types` - TypeScript type definitions
-  - [ ] `/public` - Static assets
-  - [ ] `/styles` - Global styles
-- [ ] Set up TypeScript interfaces for data models
-- [ ] Create utility functions for Firebase operations
+- [x] Create folder structure:
+  - [x] `/app` - Next.js 16 App Router pages
+  - [x] `/components` - Reusable components
+  - [x] `/lib` - Utilities and helpers
+  - [x] `/hooks` - Custom React hooks
+  - [x] `/context` - React Context providers
+  - [x] `/types` - TypeScript type definitions
+  - [x] `/public` - Static assets
+  - [x] `/styles` - Global styles
+- [x] Set up TypeScript interfaces for data models
+- [x] Create utility functions for Firebase operations
 
 ---
 
 ## Phase 2: Authentication System
 
 ### 4. Authentication Components
-- [ ] Create Login page/component
-- [ ] Create Registration page/component
-- [ ] Create Password Reset page/component
-- [ ] Implement Google OAuth login button
-- [ ] Create authentication context/provider
-- [ ] Implement protected route HOC/wrapper
+- [x] Create Login page/component
+- [x] Create Registration page/component
+- [x] Create Password Reset page/component
+- [x] Implement Google OAuth login button
+- [x] Create authentication context/provider
+- [x] Implement protected route HOC/wrapper
 - [ ] Add email verification flow
-- [ ] Create user profile setup form
+- [x] Create user profile setup form
 
 ### 5. Authentication Logic
-- [ ] Implement email/password registration
-- [ ] Implement email/password login
-- [ ] Implement Google OAuth integration
-- [ ] Implement logout functionality
-- [ ] Implement password reset functionality
+- [x] Implement email/password registration
+- [x] Implement email/password login
+- [x] Implement Google OAuth integration
+- [x] Implement logout functionality
+- [x] Implement password reset functionality
 - [ ] Add email verification
-- [ ] Create session management
-- [ ] Add authentication state persistence
+- [x] Create session management
+- [x] Add authentication state persistence
 
 ---
 
 ## Phase 3: Core UI Components
 
 ### 6. Layout Components
-- [ ] Create main layout wrapper
-- [ ] Implement bottom navigation for mobile
-  - [ ] Home tab
-  - [ ] Cart tab with badge counter
-  - [ ] Favorites tab
-  - [ ] Account tab
+- [x] Create main layout wrapper
+- [x] Implement bottom navigation for mobile
+  - [x] Home tab
+  - [x] Cart tab with badge counter
+  - [x] Favorites tab
+  - [x] Account tab
 - [ ] Implement sidebar navigation for desktop
-- [ ] Create responsive navigation logic
-- [ ] Add active state indicators
+- [x] Create responsive navigation logic
+- [x] Add active state indicators
 
 ### 7. Reusable Components
-- [ ] Create ProductCard component
-- [ ] Create Button component (CTA, secondary, etc.)
-- [ ] Create Input/Form field components
-- [ ] Create Loading spinner/skeleton
-- [ ] Create Modal/Dialog component
-- [ ] Create Toast/Notification component
-- [ ] Create Image component with lazy loading
-- [ ] Create Badge component
+- [x] Create ProductCard component
+- [x] Create Button component (CTA, secondary, etc.)
+- [x] Create Input/Form field components
+- [x] Create Loading spinner/skeleton
+- [x] Create Modal/Dialog component
+- [x] Create Toast/Notification component
+- [x] Create Image component with lazy loading
+- [x] Create Badge component
 - [ ] Create Breadcrumb component
-- [ ] Create Empty state component
+- [x] Create Empty state component
 
 ---
 
 ## Phase 4: Product Catalog
 
 ### 8. Product Listing Page (Home)
-- [ ] Create product listing page layout
-- [ ] Implement product grid view
-- [ ] Add search bar component
-- [ ] Create category filter tabs (All Items, Dress, T-Shirt, Pants)
-- [ ] Implement advanced filter button/modal
-- [ ] Add sort dropdown (price, rating, newest)
+- [x] Create product listing page layout
+- [x] Implement product grid view
+- [x] Add search bar component
+- [x] Create category filter tabs (All Items, Dress, T-Shirt, Pants)
+- [x] Implement advanced filter button/modal
+- [x] Add sort dropdown (price, rating, newest)
 - [ ] Implement pagination or infinite scroll
-- [ ] Add loading states
-- [ ] Implement empty state for no products
-- [ ] Add favorite/wishlist toggle on product cards
+- [x] Add loading states
+- [x] Implement empty state for no products
+- [x] Add favorite/wishlist toggle on product cards
 
 ### 9. Product Detail Page
-- [ ] Create product detail page layout
-- [ ] Implement image gallery/carousel
+- [x] Create product detail page layout
+- [x] Implement image gallery/carousel
 - [ ] Add image zoom functionality
-- [ ] Display product information (name, price, rating, reviews)
-- [ ] Create size selector component
-- [ ] Create color selector component
-- [ ] Implement quantity selector (+/- buttons)
-- [ ] Add "Add to Cart" button with price display
-- [ ] Show sale price with strikethrough original price
-- [ ] Implement expandable description ("Read More...")
-- [ ] Add wishlist toggle button
-- [ ] Add back navigation
+- [x] Display product information (name, price, rating, reviews)
+- [x] Create size selector component
+- [x] Create color selector component
+- [x] Implement quantity selector (+/- buttons)
+- [x] Add "Add to Cart" button with price display
+- [x] Show sale price with strikethrough original price
+- [x] Implement expandable description ("Read More...")
+- [x] Add wishlist toggle button
+- [x] Add back navigation
 - [ ] Create "Related Products" section (optional for MVP)
 
 ### 10. Product Data Management
-- [ ] Create Product TypeScript interface/type
-- [ ] Set up Firestore collection structure for products
-- [ ] Create product CRUD functions (admin)
-- [ ] Implement product fetch by ID
-- [ ] Implement product search/filter logic
-- [ ] Add product sorting logic
-- [ ] Create seed data script for testing
+- [x] Create Product TypeScript interface/type
+- [x] Set up Firestore collection structure for products
+- [x] Create product CRUD functions (admin)
+- [x] Implement product fetch by ID
+- [x] Implement product search/filter logic
+- [x] Add product sorting logic
+- [x] Create seed data script for testing
 
 ---
 
 ## Phase 5: Shopping Cart
 
 ### 11. Cart Functionality
-- [ ] Create cart context/state management
-- [ ] Implement add to cart logic
-- [ ] Implement remove from cart logic
-- [ ] Implement update quantity logic
-- [ ] Calculate subtotal/total
-- [ ] Persist cart to Firestore (for logged-in users)
-- [ ] Persist cart to localStorage (for guests)
-- [ ] Sync cart between localStorage and Firestore on login
+- [x] Create cart context/state management
+- [x] Implement add to cart logic
+- [x] Implement remove from cart logic
+- [x] Implement update quantity logic
+- [x] Calculate subtotal/total
+- [x] Persist cart to Firestore (for logged-in users)
+- [x] Persist cart to localStorage (for guests)
+- [x] Sync cart between localStorage and Firestore on login
 
 ### 12. Cart UI
-- [ ] Create cart page layout
-- [ ] Display cart items with thumbnails
-- [ ] Show product variants (size, color)
-- [ ] Add quantity adjusters for each item
-- [ ] Implement remove item button
-- [ ] Show subtotal calculation
+- [x] Create cart page layout
+- [x] Display cart items with thumbnails
+- [x] Show product variants (size, color)
+- [x] Add quantity adjusters for each item
+- [x] Implement remove item button
+- [x] Show subtotal calculation
 - [ ] Add "Save for Later" functionality (optional for MVP)
-- [ ] Create mini cart indicator (badge on nav)
-- [ ] Implement empty cart state
-- [ ] Add "Continue Shopping" button
+- [x] Create mini cart indicator (badge on nav)
+- [x] Implement empty cart state
+- [x] Add "Continue Shopping" button
 
 ---
 
 ## Phase 6: Wishlist/Favorites
 
 ### 13. Wishlist Functionality
-- [ ] Create wishlist context/state management
-- [ ] Implement add to wishlist logic
-- [ ] Implement remove from wishlist logic
-- [ ] Persist wishlist to Firestore
-- [ ] Sync wishlist on login
+- [x] Create wishlist context/state management
+- [x] Implement add to wishlist logic
+- [x] Implement remove from wishlist logic
+- [x] Persist wishlist to Firestore
+- [x] Sync wishlist on login
 
 ### 14. Wishlist UI
-- [ ] Create favorites/wishlist page
-- [ ] Display favorited products in grid
-- [ ] Add "Add to Cart" button for each item
-- [ ] Add remove from wishlist button
-- [ ] Implement empty wishlist state
-- [ ] Add wishlist counter badge on nav
+- [x] Create favorites/wishlist page
+- [x] Display favorited products in grid
+- [x] Add "Add to Cart" button for each item
+- [x] Add remove from wishlist button
+- [x] Implement empty wishlist state
+- [x] Add wishlist counter badge on nav
 
 ---
 
 ## Phase 7: Checkout Process
 
 ### 15. Checkout Page UI
-- [ ] Create checkout page layout
-- [ ] Display order summary with product list
-- [ ] Show product thumbnails, names, variants
-- [ ] Add quantity adjusters in checkout
+- [x] Create checkout page layout
+- [x] Display order summary with product list
+- [x] Show product thumbnails, names, variants
+- [x] Add quantity adjusters in checkout
 - [ ] Implement item options menu (remove, save for later)
-- [ ] Create shipping information section
-- [ ] Create payment method section
-- [ ] Display saved payment methods
-- [ ] Add card type icons (Visa, Mastercard, etc.)
-- [ ] Show price breakdown (items total, shipping, discount, subtotal)
-- [ ] Create large "Pay" button
-- [ ] Add back navigation
+- [x] Create shipping information section
+- [x] Create payment method section
+- [x] Display saved payment methods
+- [x] Add card type icons (Visa, Mastercard, etc.)
+- [x] Show price breakdown (items total, shipping, discount, subtotal)
+- [x] Create large "Pay" button
+- [x] Add back navigation
 
 ### 16. Shipping Address
-- [ ] Create address form component
-- [ ] Implement address validation
-- [ ] Add "Save address" functionality
-- [ ] Display saved addresses selector
-- [ ] Allow editing/deleting saved addresses
-- [ ] Set default shipping address
+- [x] Create address form component
+- [x] Implement address validation
+- [x] Add "Save address" functionality
+- [x] Display saved addresses selector
+- [x] Allow editing/deleting saved addresses
+- [x] Set default shipping address
 
-### 17. Payment Integration
+### 17. Payment Integration (⚠️ MOCK DATA - NOT REAL PAYMENT)
 - [ ] Set up Stripe account
 - [ ] Install Stripe SDK
 - [ ] Create Stripe payment intent API endpoint
 - [ ] Implement Stripe Elements for card input
 - [ ] Add payment method save functionality
-- [ ] Display saved payment methods
-- [ ] Implement payment processing
+- [x] Display saved payment methods (UI only)
+- [ ] Implement payment processing (currently mock)
 - [ ] Handle payment success/failure
-- [ ] Add loading states during payment
+- [x] Add loading states during payment
 
 ### 18. Discount Codes
 - [ ] Create discount code input field
@@ -223,101 +223,101 @@ This document tracks all development tasks based on the specification in [01-spe
 ## Phase 8: Order Management
 
 ### 19. Order Confirmation
-- [ ] Create order confirmation page
-- [ ] Display order number
-- [ ] Show estimated delivery date
-- [ ] Display order summary
-- [ ] Add "Track Order" link
-- [ ] Send order confirmation email
-- [ ] Clear cart after successful order
+- [x] Create order confirmation page
+- [x] Display order number
+- [x] Show estimated delivery date
+- [x] Display order summary
+- [x] Add "Track Order" link
+- [ ] Send order confirmation email (⚠️ NOT IMPLEMENTED)
+- [x] Clear cart after successful order
 
 ### 20. Order History
-- [ ] Create orders collection in Firestore
-- [ ] Implement create order function
-- [ ] Create order history page (in user account)
-- [ ] Display list of past orders
-- [ ] Show order status for each order
-- [ ] Add "View Details" for each order
-- [ ] Create order detail page
-- [ ] Implement order tracking (basic status)
+- [x] Create orders collection in Firestore
+- [x] Implement create order function
+- [x] Create order history page (in user account)
+- [x] Display list of past orders
+- [x] Show order status for each order
+- [x] Add "View Details" for each order
+- [x] Create order detail page
+- [x] Implement order tracking (basic status)
 
 ---
 
 ## Phase 9: User Account
 
 ### 21. User Profile
-- [ ] Create user account page/dashboard
-- [ ] Display user information
-- [ ] Create edit profile form
-- [ ] Implement update profile logic
-- [ ] Add change password functionality
-- [ ] Upload/change profile photo
-- [ ] Update phone number
+- [x] Create user account page/dashboard
+- [x] Display user information
+- [x] Create edit profile form
+- [x] Implement update profile logic
+- [x] Add change password functionality
+- [x] Upload/change profile photo
+- [x] Update phone number
 
 ### 22. Account Settings
-- [ ] Create settings page
-- [ ] Add notification preferences
-- [ ] Implement email notification toggles
-- [ ] Add sign out functionality
+- [x] Create settings page
+- [x] Add notification preferences
+- [x] Implement email notification toggles
+- [x] Add sign out functionality
 - [ ] Create "Delete Account" option (optional)
 
 ### 23. Address & Payment Management
-- [ ] Create "Manage Addresses" section
-- [ ] Display all saved addresses
-- [ ] Add/edit/delete address functionality
-- [ ] Set default address
-- [ ] Create "Manage Payment Methods" section
-- [ ] Display saved cards (masked)
-- [ ] Add/remove payment methods
-- [ ] Set default payment method
+- [x] Create "Manage Addresses" section
+- [x] Display all saved addresses
+- [x] Add/edit/delete address functionality
+- [x] Set default address
+- [x] Create "Manage Payment Methods" section
+- [x] Display saved cards (masked)
+- [x] Add/remove payment methods
+- [x] Set default payment method
 
 ---
 
 ## Phase 10: Admin Dashboard (Basic)
 
 ### 24. Admin Authentication
-- [ ] Add admin role to User type
-- [ ] Create admin-only routes
-- [ ] Implement admin authentication check
-- [ ] Create admin dashboard layout
+- [x] Add admin role to User type
+- [x] Create admin-only routes
+- [x] Implement admin authentication check
+- [x] Create admin dashboard layout
 
 ### 25. Product Management
-- [ ] Create product list view for admin
-- [ ] Implement add new product form
-  - [ ] Product name, description
-  - [ ] Category selector
-  - [ ] Price and sale price inputs
-  - [ ] Size options (multi-select)
-  - [ ] Color options with color picker
-  - [ ] Stock quantity
-- [ ] Add product image upload (multiple images)
-- [ ] Implement edit product functionality
-- [ ] Implement delete product functionality
-- [ ] Add product publish/unpublish toggle
+- [x] Create product list view for admin
+- [x] Implement add new product form
+  - [x] Product name, description
+  - [x] Category selector
+  - [x] Price and sale price inputs
+  - [x] Size options (multi-select)
+  - [x] Color options with color picker
+  - [x] Stock quantity
+- [x] Add product image upload (multiple images)
+- [x] Implement edit product functionality
+- [x] Implement delete product functionality
+- [x] Add product publish/unpublish toggle
 
 ### 26. Order Management (Admin)
-- [ ] Create order list view for admin
-- [ ] Display order details
-- [ ] Implement order status update
-- [ ] Add order filtering (status, date)
-- [ ] Show customer information
-- [ ] Add order search functionality
+- [x] Create order list view for admin
+- [x] Display order details
+- [x] Implement order status update
+- [x] Add order filtering (status, date)
+- [x] Show customer information
+- [x] Add order search functionality
 
 ---
 
 ## Phase 11: Polish & Optimization
 
 ### 27. UI/UX Polish
-- [ ] Implement consistent loading states
+- [x] Implement consistent loading states
 - [ ] Add smooth transitions/animations
-- [ ] Optimize mobile touch interactions
+- [x] Optimize mobile touch interactions
 - [ ] Add error boundaries
-- [ ] Implement form validation with clear error messages
-- [ ] Add success/error toast notifications
-- [ ] Ensure consistent spacing and typography
-- [ ] Test and fix responsive design issues
-- [ ] Add hover states for interactive elements
-- [ ] Implement focus states for accessibility
+- [x] Implement form validation with clear error messages
+- [x] Add success/error toast notifications
+- [x] Ensure consistent spacing and typography
+- [x] Test and fix responsive design issues
+- [x] Add hover states for interactive elements
+- [x] Implement focus states for accessibility
 
 ### 28. Performance Optimization
 - [ ] Optimize images (WebP format, compression)
@@ -424,8 +424,8 @@ This document tracks all development tasks based on the specification in [01-spe
 - [ ] AI-based product recommendations
 - [ ] Email marketing integration
 - [ ] Loyalty program/points system
-- [ ] Multi-language support (i18n)
-- [ ] Multi-currency support
+- [x] Multi-language support (i18n) - English & Thai implemented
+- [x] Multi-currency support - USD, THB, EUR, GBP, JPY
 - [ ] Live chat support
 - [ ] Push notifications
 

@@ -88,13 +88,48 @@ export default function SideNav() {
     return (
         <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex-col z-40">
             {/* Logo/Brand */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-gray-200">
                 <h1 className="text-2xl font-bold text-gray-900">StyleShop</h1>
             </div>
 
+
+
+            {/* Navigation Items */}
+            <nav className="flex-1 overflow-y-auto p-4">
+                <ul className="space-y-2">
+                    {navItems.map((item) => {
+                        const isActive = pathname === item.path;
+                        const Icon = item.icon;
+
+                        return (
+                            <li key={item.path}>
+                                <button
+                                    onClick={() => handleNavClick(item)}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive
+                                        ? 'bg-black text-white'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <div className="relative">
+                                        <Icon size={20} />
+                                        {item.badge > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                                {item.badge > 9 ? '9+' : item.badge}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <span className="font-medium">{item.label}</span>
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
+
+
             {/* User Profile Section */}
             {user && (
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-6 border-b border-gray-200 border-t">
                     <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
                             {user.photoURL ? (
@@ -122,43 +157,8 @@ export default function SideNav() {
                     </div>
                 </div>
             )}
-
-            {/* Navigation Items */}
-            <nav className="flex-1 overflow-y-auto p-4">
-                <ul className="space-y-2">
-                    {navItems.map((item) => {
-                        const isActive = pathname === item.path;
-                        const Icon = item.icon;
-
-                        return (
-                            <li key={item.path}>
-                                <button
-                                    onClick={() => handleNavClick(item)}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                                        isActive
-                                            ? 'bg-black text-white'
-                                            : 'text-gray-700 hover:bg-gray-100'
-                                    }`}
-                                >
-                                    <div className="relative">
-                                        <Icon size={20} />
-                                        {item.badge > 0 && (
-                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                                                {item.badge > 9 ? '9+' : item.badge}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <span className="font-medium">{item.label}</span>
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
-
             {/* Language Switcher */}
             <LanguageSwitcher />
-
             {/* Bottom Actions */}
             <div className="p-4 border-t border-gray-200">
                 {user ? (

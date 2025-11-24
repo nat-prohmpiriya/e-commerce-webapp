@@ -28,14 +28,17 @@ export default function AdminProductsPage() {
 
   // Filter products
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+    const name = product.name || product.name_en || product.name_th || '';
+    const description = product.description || product.description_en || product.description_th || '';
+    const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         description.toLowerCase().includes(searchQuery.toLowerCase());
+    const category = product.category || product.category_en || product.category_th || '';
+    const matchesCategory = categoryFilter === 'all' || category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
   // Get unique categories
-  const categories = ['all', ...Array.from(new Set(products.map(p => p.category)))];
+  const categories = ['all', ...Array.from(new Set(products.map(p => p.category || p.category_en || p.category_th || '')))];
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(t('confirmDeleteProduct', { name }))) {
@@ -176,7 +179,7 @@ export default function AdminProductsPage() {
                             {product.images && product.images.length > 0 ? (
                               <Image
                                 src={product.images[0]}
-                                alt={product.name}
+                                alt={product.name || product.name_en || product.name_th || 'Product'}
                                 fill
                                 className="object-cover"
                               />
@@ -187,13 +190,17 @@ export default function AdminProductsPage() {
                             )}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-gray-900">{product.name}</p>
+                            <p className="text-sm font-semibold text-gray-900">
+                              {product.name || product.name_en || product.name_th || 'N/A'}
+                            </p>
                             <p className="text-xs text-gray-500">{product.id}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{product.category}</span>
+                        <span className="text-sm text-gray-900">
+                          {product.category || product.category_en || product.category_th || 'N/A'}
+                        </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm">
@@ -242,7 +249,7 @@ export default function AdminProductsPage() {
                             <Edit2 size={18} />
                           </button>
                           <button
-                            onClick={() => handleDelete(product.id, product.name)}
+                            onClick={() => handleDelete(product.id, product.name || product.name_en || product.name_th || 'this product')}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title={t('delete')}
                           >
