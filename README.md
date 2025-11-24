@@ -12,6 +12,8 @@ A full-stack, production-ready e-commerce platform built with Next.js 16, TypeSc
 
 [Live Demo](#) • [Documentation](#) • [Report Bug](#)
 
+**🌐 Languages:** **English** | [ไทย](README.th.md)
+
 </div>
 
 ---
