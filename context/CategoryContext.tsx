@@ -36,7 +36,7 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
           id: doc.id,
           createdAt: data.createdAt || Timestamp.now(),
           updatedAt: data.updatedAt || Timestamp.now(),
-        } as Category);
+        } as unknown as Category);
       });
 
       return firestoreCategories;

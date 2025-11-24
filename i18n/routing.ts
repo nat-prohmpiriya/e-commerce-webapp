@@ -16,3 +16,6 @@ export const routing = defineRouting({
 // that will consider the routing configuration
 export const { Link, redirect, usePathname, useRouter } =
   createNavigation(routing);
+
+// Re-export useParams from next/navigation since it's not wrapped by next-intl
+export { useParams } from 'next/navigation';

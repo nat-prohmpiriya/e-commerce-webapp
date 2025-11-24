@@ -64,9 +64,13 @@ export default function NewProductPage() {
 
     try {
       await createProduct({
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
+        // Use same value for both languages for now
+        name_th: formData.name,
+        name_en: formData.name,
+        description_th: formData.description,
+        description_en: formData.description,
+        category_th: formData.category,
+        category_en: formData.category,
         price: parseFloat(formData.price),
         salePrice: formData.salePrice ? parseFloat(formData.salePrice) : undefined,
         images: images,

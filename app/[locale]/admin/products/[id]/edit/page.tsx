@@ -42,9 +42,9 @@ export default function EditProductPage() {
   useEffect(() => {
     if (product && !loaded) {
       setFormData({
-        name: product.name,
-        description: product.description,
-        category: product.category,
+        name: product.name || product.name_en || product.name_th || '',
+        description: product.description || product.description_en || product.description_th || '',
+        category: product.category || product.category_en || product.category_th || '',
         price: product.price.toString(),
         salePrice: product.salePrice?.toString() || '',
         stock: product.stock.toString(),
@@ -103,9 +103,13 @@ export default function EditProductPage() {
 
     try {
       await updateProduct(product.id, {
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
+        // Use same value for both languages for now
+        name_th: formData.name,
+        name_en: formData.name,
+        description_th: formData.description,
+        description_en: formData.description,
+        category_th: formData.category,
+        category_en: formData.category,
         price: parseFloat(formData.price),
         salePrice: formData.salePrice ? parseFloat(formData.salePrice) : undefined,
         images: images,

@@ -5,9 +5,12 @@ const streetwearProducts: Product[] = [
   // T-SHIRTS & TOPS
   {
     id: "sw-001",
-    name: "Oversized Black Tee",
-    description: "Premium heavyweight cotton tee with an oversized fit. Perfect for layering or wearing solo. Features reinforced neckline and double-stitched sleeves for durability.",
-    category: "T-Shirts & Tops",
+    name_th: "Oversized Black Tee",
+    name_en: "Oversized Black Tee",
+    description_th: "Premium heavyweight cotton tee with an oversized fit. Perfect for layering or wearing solo. Features reinforced neckline and double-stitched sleeves for durability.",
+    description_en: "Premium heavyweight cotton tee with an oversized fit. Perfect for layering or wearing solo. Features reinforced neckline and double-stitched sleeves for durability.",
+    category_th: "เสื้อยืดและเสื้อท็อป",
+    category_en: "T-Shirts & Tops",
     price: 890,
     salePrice: undefined,
     images: [
@@ -29,9 +32,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-002",
-    name: "Vintage Graphic Tee",
-    description: "Retro-inspired graphic tee with vintage wash. Unique print design that captures the essence of 90s streetwear culture.",
-    category: "T-Shirts & Tops",
+    name_th: "Vintage Graphic Tee",
+    name_en: "Vintage Graphic Tee",
+    description_th: "Retro-inspired graphic tee with vintage wash. Unique print design that captures the essence of 90s streetwear culture.",
+    description_en: "Retro-inspired graphic tee with vintage wash. Unique print design that captures the essence of 90s streetwear culture.",
+    category_th: "เสื้อยืดและเสื้อท็อป",
+    category_en: "T-Shirts & Tops",
     price: 1290,
     salePrice: 990,
     images: [
@@ -53,9 +59,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-003",
-    name: "Minimalist Long Sleeve Tee",
-    description: "Clean and minimal long sleeve tee made from organic cotton. Comfortable fit for all-day wear with subtle branding.",
-    category: "T-Shirts & Tops",
+    name_th: "Minimalist Long Sleeve Tee",
+    name_en: "Minimalist Long Sleeve Tee",
+    description_th: "Clean and minimal long sleeve tee made from organic cotton. Comfortable fit for all-day wear with subtle branding.",
+    description_en: "Clean and minimal long sleeve tee made from organic cotton. Comfortable fit for all-day wear with subtle branding.",
+    category_th: "เสื้อยืดและเสื้อท็อป",
+    category_en: "T-Shirts & Tops",
     price: 1190,
     salePrice: undefined,
     images: [
@@ -76,9 +85,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-004",
-    name: "Striped Polo Shirt",
-    description: "Classic polo with modern streetwear twist. Premium pique cotton with contrast stripes and embroidered logo.",
-    category: "T-Shirts & Tops",
+    name_th: "Striped Polo Shirt",
+    name_en: "Striped Polo Shirt",
+    description_th: "Classic polo with modern streetwear twist. Premium pique cotton with contrast stripes and embroidered logo.",
+    description_en: "Classic polo with modern streetwear twist. Premium pique cotton with contrast stripes and embroidered logo.",
+    category_th: "เสื้อยืดและเสื้อท็อป",
+    category_en: "T-Shirts & Tops",
     price: 1590,
     salePrice: undefined,
     images: [
@@ -100,9 +112,12 @@ const streetwearProducts: Product[] = [
   // HOODIES & SWEATSHIRTS
   {
     id: "sw-005",
-    name: "Classic Pullover Hoodie",
-    description: "Essential heavyweight hoodie with adjustable drawstrings. Premium fleece lining for maximum comfort and warmth.",
-    category: "Hoodies & Sweatshirts",
+    name_th: "Classic Pullover Hoodie",
+    name_en: "Classic Pullover Hoodie",
+    description_th: "Essential heavyweight hoodie with adjustable drawstrings. Premium fleece lining for maximum comfort and warmth.",
+    description_en: "Essential heavyweight hoodie with adjustable drawstrings. Premium fleece lining for maximum comfort and warmth.",
+    category_th: "เสื้อฮู้ดและสเวตเตอร์",
+    category_en: "Hoodies & Sweatshirts",
     price: 2290,
     salePrice: 1890,
     images: [
@@ -125,9 +140,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-006",
-    name: "Vintage Washed Hoodie",
-    description: "Oversized hoodie with vintage wash treatment. Unique faded effect makes each piece one-of-a-kind.",
-    category: "Hoodies & Sweatshirts",
+    name_th: "Vintage Washed Hoodie",
+    name_en: "Vintage Washed Hoodie",
+    description_th: "Oversized hoodie with vintage wash treatment. Unique faded effect makes each piece one-of-a-kind.",
+    description_en: "Oversized hoodie with vintage wash treatment. Unique faded effect makes each piece one-of-a-kind.",
+    category_th: "เสื้อฮู้ดและสเวตเตอร์",
+    category_en: "Hoodies & Sweatshirts",
     price: 2590,
     salePrice: undefined,
     images: [
@@ -148,9 +166,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-007",
-    name: "Zip-Up Tech Hoodie",
-    description: "Modern tech hoodie with full zip closure. Features water-resistant fabric and multiple utility pockets.",
-    category: "Hoodies & Sweatshirts",
+    name_th: "Zip-Up Tech Hoodie",
+    name_en: "Zip-Up Tech Hoodie",
+    description_th: "Modern tech hoodie with full zip closure. Features water-resistant fabric and multiple utility pockets.",
+    description_en: "Modern tech hoodie with full zip closure. Features water-resistant fabric and multiple utility pockets.",
+    category_th: "เสื้อฮู้ดและสเวตเตอร์",
+    category_en: "Hoodies & Sweatshirts",
     price: 2890,
     salePrice: undefined,
     images: [
@@ -170,9 +191,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-008",
-    name: "Crewneck Sweatshirt",
-    description: "Classic crewneck with embroidered logo. Soft cotton blend fleece with ribbed cuffs and hem.",
-    category: "Hoodies & Sweatshirts",
+    name_th: "Crewneck Sweatshirt",
+    name_en: "Crewneck Sweatshirt",
+    description_th: "Classic crewneck with embroidered logo. Soft cotton blend fleece with ribbed cuffs and hem.",
+    description_en: "Classic crewneck with embroidered logo. Soft cotton blend fleece with ribbed cuffs and hem.",
+    category_th: "เสื้อฮู้ดและสเวตเตอร์",
+    category_en: "Hoodies & Sweatshirts",
     price: 1990,
     salePrice: 1590,
     images: [
@@ -195,9 +219,12 @@ const streetwearProducts: Product[] = [
   // PANTS & BOTTOMS
   {
     id: "sw-009",
-    name: "Cargo Utility Pants",
-    description: "Multi-pocket cargo pants with adjustable waist. Durable ripstop fabric perfect for urban exploration.",
-    category: "Pants & Bottoms",
+    name_th: "Cargo Utility Pants",
+    name_en: "Cargo Utility Pants",
+    description_th: "Multi-pocket cargo pants with adjustable waist. Durable ripstop fabric perfect for urban exploration.",
+    description_en: "Multi-pocket cargo pants with adjustable waist. Durable ripstop fabric perfect for urban exploration.",
+    category_th: "กางเกงและกางเกงขาสั้น",
+    category_en: "Pants & Bottoms",
     price: 2190,
     salePrice: undefined,
     images: [
@@ -219,9 +246,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-010",
-    name: "Straight Fit Jeans",
-    description: "Classic straight fit jeans in premium denim. Comfortable mid-rise with traditional 5-pocket styling.",
-    category: "Pants & Bottoms",
+    name_th: "Straight Fit Jeans",
+    name_en: "Straight Fit Jeans",
+    description_th: "Classic straight fit jeans in premium denim. Comfortable mid-rise with traditional 5-pocket styling.",
+    description_en: "Classic straight fit jeans in premium denim. Comfortable mid-rise with traditional 5-pocket styling.",
+    category_th: "กางเกงและกางเกงขาสั้น",
+    category_en: "Pants & Bottoms",
     price: 2490,
     salePrice: 1990,
     images: [
@@ -242,9 +272,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-011",
-    name: "Tapered Joggers",
-    description: "Comfortable joggers with tapered fit. Elastic waistband with drawstring and zippered ankle cuffs.",
-    category: "Pants & Bottoms",
+    name_th: "Tapered Joggers",
+    name_en: "Tapered Joggers",
+    description_th: "Comfortable joggers with tapered fit. Elastic waistband with drawstring and zippered ankle cuffs.",
+    description_en: "Comfortable joggers with tapered fit. Elastic waistband with drawstring and zippered ankle cuffs.",
+    category_th: "กางเกงและกางเกงขาสั้น",
+    category_en: "Pants & Bottoms",
     price: 1890,
     salePrice: undefined,
     images: [
@@ -265,9 +298,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-012",
-    name: "Wide Leg Pants",
-    description: "Trendy wide leg pants with relaxed fit. Premium cotton twill fabric with pleated front.",
-    category: "Pants & Bottoms",
+    name_th: "Wide Leg Pants",
+    name_en: "Wide Leg Pants",
+    description_th: "Trendy wide leg pants with relaxed fit. Premium cotton twill fabric with pleated front.",
+    description_en: "Trendy wide leg pants with relaxed fit. Premium cotton twill fabric with pleated front.",
+    category_th: "กางเกงและกางเกงขาสั้น",
+    category_en: "Pants & Bottoms",
     price: 2290,
     salePrice: undefined,
     images: [
@@ -287,9 +323,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-013",
-    name: "Utility Shorts",
-    description: "Functional cargo shorts with multiple pockets. Perfect for summer streetwear with adjustable hem.",
-    category: "Pants & Bottoms",
+    name_th: "Utility Shorts",
+    name_en: "Utility Shorts",
+    description_th: "Functional cargo shorts with multiple pockets. Perfect for summer streetwear with adjustable hem.",
+    description_en: "Functional cargo shorts with multiple pockets. Perfect for summer streetwear with adjustable hem.",
+    category_th: "กางเกงและกางเกงขาสั้น",
+    category_en: "Pants & Bottoms",
     price: 1590,
     salePrice: 1290,
     images: [
@@ -312,9 +351,12 @@ const streetwearProducts: Product[] = [
   // OUTERWEAR
   {
     id: "sw-014",
-    name: "Oversized Bomber Jacket",
-    description: "Statement bomber jacket with oversized fit. Premium nylon shell with quilted lining and MA-1 pocket details.",
-    category: "Outerwear",
+    name_th: "Oversized Bomber Jacket",
+    name_en: "Oversized Bomber Jacket",
+    description_th: "Statement bomber jacket with oversized fit. Premium nylon shell with quilted lining and MA-1 pocket details.",
+    description_en: "Statement bomber jacket with oversized fit. Premium nylon shell with quilted lining and MA-1 pocket details.",
+    category_th: "เสื้อนอก",
+    category_en: "Outerwear",
     price: 3490,
     salePrice: 2990,
     images: [
@@ -336,9 +378,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-015",
-    name: "Windbreaker Jacket",
-    description: "Lightweight windbreaker with packable design. Water-resistant coating and adjustable hood.",
-    category: "Outerwear",
+    name_th: "Windbreaker Jacket",
+    name_en: "Windbreaker Jacket",
+    description_th: "Lightweight windbreaker with packable design. Water-resistant coating and adjustable hood.",
+    description_en: "Lightweight windbreaker with packable design. Water-resistant coating and adjustable hood.",
+    category_th: "เสื้อนอก",
+    category_en: "Outerwear",
     price: 2790,
     salePrice: undefined,
     images: [
@@ -358,9 +403,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-016",
-    name: "Denim Trucker Jacket",
-    description: "Classic trucker jacket in premium denim. Vintage wash with button closure and chest pockets.",
-    category: "Outerwear",
+    name_th: "Denim Trucker Jacket",
+    name_en: "Denim Trucker Jacket",
+    description_th: "Classic trucker jacket in premium denim. Vintage wash with button closure and chest pockets.",
+    description_en: "Classic trucker jacket in premium denim. Vintage wash with button closure and chest pockets.",
+    category_th: "เสื้อนอก",
+    category_en: "Outerwear",
     price: 2990,
     salePrice: undefined,
     images: [
@@ -380,9 +428,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-017",
-    name: "Puffer Vest",
-    description: "Quilted puffer vest for layering. Lightweight insulation with side pockets and high collar.",
-    category: "Outerwear",
+    name_th: "Puffer Vest",
+    name_en: "Puffer Vest",
+    description_th: "Quilted puffer vest for layering. Lightweight insulation with side pockets and high collar.",
+    description_en: "Quilted puffer vest for layering. Lightweight insulation with side pockets and high collar.",
+    category_th: "เสื้อนอก",
+    category_en: "Outerwear",
     price: 2390,
     salePrice: 1990,
     images: [
@@ -402,9 +453,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-018",
-    name: "Coach Jacket",
-    description: "Classic coach jacket with snap button closure. Water-resistant nylon with mesh lining.",
-    category: "Outerwear",
+    name_th: "Coach Jacket",
+    name_en: "Coach Jacket",
+    description_th: "Classic coach jacket with snap button closure. Water-resistant nylon with mesh lining.",
+    description_en: "Classic coach jacket with snap button closure. Water-resistant nylon with mesh lining.",
+    category_th: "เสื้อนอก",
+    category_en: "Outerwear",
     price: 2190,
     salePrice: undefined,
     images: [
@@ -427,9 +481,12 @@ const streetwearProducts: Product[] = [
   // ACCESSORIES
   {
     id: "sw-019",
-    name: "Classic Snapback Cap",
-    description: "Structured snapback with embroidered logo. Adjustable snap closure with flat brim.",
-    category: "Accessories",
+    name_th: "Classic Snapback Cap",
+    name_en: "Classic Snapback Cap",
+    description_th: "Structured snapback with embroidered logo. Adjustable snap closure with flat brim.",
+    description_en: "Structured snapback with embroidered logo. Adjustable snap closure with flat brim.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 790,
     salePrice: 590,
     images: [
@@ -450,9 +507,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-020",
-    name: "Beanie Hat",
-    description: "Warm knit beanie for cold days. Soft acrylic yarn with fold-up cuff and woven label.",
-    category: "Accessories",
+    name_th: "Beanie Hat",
+    name_en: "Beanie Hat",
+    description_th: "Warm knit beanie for cold days. Soft acrylic yarn with fold-up cuff and woven label.",
+    description_en: "Warm knit beanie for cold days. Soft acrylic yarn with fold-up cuff and woven label.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 590,
     salePrice: undefined,
     images: [
@@ -473,9 +533,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-021",
-    name: "Crossbody Bag",
-    description: "Minimalist crossbody bag with adjustable strap. Multiple compartments with YKK zippers.",
-    category: "Accessories",
+    name_th: "Crossbody Bag",
+    name_en: "Crossbody Bag",
+    description_th: "Minimalist crossbody bag with adjustable strap. Multiple compartments with YKK zippers.",
+    description_en: "Minimalist crossbody bag with adjustable strap. Multiple compartments with YKK zippers.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 1290,
     salePrice: undefined,
     images: [
@@ -495,9 +558,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-022",
-    name: "Canvas Backpack",
-    description: "Durable canvas backpack with laptop compartment. Padded shoulder straps and multiple organizer pockets.",
-    category: "Accessories",
+    name_th: "Canvas Backpack",
+    name_en: "Canvas Backpack",
+    description_th: "Durable canvas backpack with laptop compartment. Padded shoulder straps and multiple organizer pockets.",
+    description_en: "Durable canvas backpack with laptop compartment. Padded shoulder straps and multiple organizer pockets.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 1790,
     salePrice: 1490,
     images: [
@@ -518,9 +584,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-023",
-    name: "Leather Belt",
-    description: "Premium leather belt with metal buckle. Genuine leather with contrast stitching.",
-    category: "Accessories",
+    name_th: "Leather Belt",
+    name_en: "Leather Belt",
+    description_th: "Premium leather belt with metal buckle. Genuine leather with contrast stitching.",
+    description_en: "Premium leather belt with metal buckle. Genuine leather with contrast stitching.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 890,
     salePrice: undefined,
     images: [
@@ -540,9 +609,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-024",
-    name: "Crew Socks Pack",
-    description: "Premium cotton crew socks - Pack of 3. Reinforced heel and toe with arch support.",
-    category: "Accessories",
+    name_th: "Crew Socks Pack",
+    name_en: "Crew Socks Pack",
+    description_th: "Premium cotton crew socks - Pack of 3. Reinforced heel and toe with arch support.",
+    description_en: "Premium cotton crew socks - Pack of 3. Reinforced heel and toe with arch support.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 490,
     salePrice: 390,
     images: [
@@ -563,9 +635,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-025",
-    name: "Bucket Hat",
-    description: "Classic bucket hat with reversible design. Cotton twill fabric with packable construction.",
-    category: "Accessories",
+    name_th: "Bucket Hat",
+    name_en: "Bucket Hat",
+    description_th: "Classic bucket hat with reversible design. Cotton twill fabric with packable construction.",
+    description_en: "Classic bucket hat with reversible design. Cotton twill fabric with packable construction.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 690,
     salePrice: undefined,
     images: [
@@ -586,9 +661,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-026",
-    name: "Canvas Tote Bag",
-    description: "Heavy-duty canvas tote bag with reinforced handles. Perfect for daily essentials with large capacity.",
-    category: "Accessories",
+    name_th: "Canvas Tote Bag",
+    name_en: "Canvas Tote Bag",
+    description_th: "Heavy-duty canvas tote bag with reinforced handles. Perfect for daily essentials with large capacity.",
+    description_en: "Heavy-duty canvas tote bag with reinforced handles. Perfect for daily essentials with large capacity.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 590,
     salePrice: undefined,
     images: [
@@ -608,9 +686,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-027",
-    name: "Chain Necklace",
-    description: "Stainless steel chain necklace. Adjustable length with secure lobster clasp.",
-    category: "Accessories",
+    name_th: "Chain Necklace",
+    name_en: "Chain Necklace",
+    description_th: "Stainless steel chain necklace. Adjustable length with secure lobster clasp.",
+    description_en: "Stainless steel chain necklace. Adjustable length with secure lobster clasp.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 890,
     salePrice: 690,
     images: [
@@ -630,9 +711,12 @@ const streetwearProducts: Product[] = [
   },
   {
     id: "sw-028",
-    name: "Waist Bag",
-    description: "Compact waist bag with adjustable strap. Water-resistant material with multiple zipper pockets.",
-    category: "Accessories",
+    name_th: "Waist Bag",
+    name_en: "Waist Bag",
+    description_th: "Compact waist bag with adjustable strap. Water-resistant material with multiple zipper pockets.",
+    description_en: "Compact waist bag with adjustable strap. Water-resistant material with multiple zipper pockets.",
+    category_th: "เครื่องประดับ",
+    category_en: "Accessories",
     price: 990,
     salePrice: undefined,
     images: [

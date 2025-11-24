@@ -30,7 +30,7 @@ export default function FavoritesPage() {
   const handleAddToCart = (product: typeof products[0]) => {
     addToCart({
       productId: product.id,
-      productName: product.name,
+      productName: product.name || product.name_en || product.name_th || 'Product',
       productImage: product.images[0],
       quantity: 1,
       size: product.sizes[0], // Default to first size
@@ -89,7 +89,7 @@ export default function FavoritesPage() {
                   >
                     <Image
                       src={product.images[0]}
-                      alt={product.name}
+                      alt={product.name || product.name_en || product.name_th || 'Product'}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -112,9 +112,11 @@ export default function FavoritesPage() {
                       onClick={() => router.push(`/products/${product.id}`)}
                       className="font-semibold text-gray-900 mb-1 line-clamp-1 cursor-pointer"
                     >
-                      {product.name}
+                      {product.name || product.name_en || product.name_th || 'Product'}
                     </h3>
-                    <p className="text-xs text-gray-500 mb-2">{product.category}</p>
+                    <p className="text-xs text-gray-500 mb-2">
+                      {product.category || product.category_en || product.category_th || ''}
+                    </p>
 
                     <div className="flex items-center justify-between mb-3">
                       <span className="font-bold text-gray-900">${displayPrice.toFixed(2)}</span>

@@ -18,9 +18,11 @@ export default function AdminCategoriesPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [formData, setFormData] = useState({
-    name: '',
+    name_th: '',
+    name_en: '',
     slug: '',
-    description: '',
+    description_th: '',
+    description_en: '',
     isActive: true,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -37,17 +39,21 @@ export default function AdminCategoriesPage() {
     if (category) {
       setEditingCategory(category);
       setFormData({
-        name: category.name,
+        name_th: category.name_th || category.name || '',
+        name_en: category.name_en || category.name || '',
         slug: category.slug,
-        description: category.description || '',
+        description_th: category.description_th || category.description || '',
+        description_en: category.description_en || category.description || '',
         isActive: category.isActive,
       });
     } else {
       setEditingCategory(null);
       setFormData({
-        name: '',
+        name_th: '',
+        name_en: '',
         slug: '',
-        description: '',
+        description_th: '',
+        description_en: '',
         isActive: true,
       });
     }
@@ -58,9 +64,11 @@ export default function AdminCategoriesPage() {
     setShowModal(false);
     setEditingCategory(null);
     setFormData({
-      name: '',
+      name_th: '',
+      name_en: '',
       slug: '',
-      description: '',
+      description_th: '',
+      description_en: '',
       isActive: true,
     });
   };
@@ -72,18 +80,20 @@ export default function AdminCategoriesPage() {
       .replace(/^-+|-+$/g, '');
   };
 
-  const handleNameChange = (name: string) => {
+  const handleNameChange = (name: string, lang: 'th' | 'en') => {
+    const field = lang === 'th' ? 'name_th' : 'name_en';
     setFormData({
       ...formData,
-      name,
-      slug: generateSlug(name),
+      [field]: name,
+      // Generate slug from English name, fallback to Thai if English is empty
+      slug: generateSlug(lang === 'en' ? name : (formData.name_en || name)),
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.slug) {
+    if (!formData.name_th || !formData.name_en || !formData.slug) {
       toast.error(t('fillRequiredFields'));
       return;
     }
@@ -93,17 +103,21 @@ export default function AdminCategoriesPage() {
     try {
       if (editingCategory) {
         await updateCategory(editingCategory.id, {
-          name: formData.name,
+          name_th: formData.name_th,
+          name_en: formData.name_en,
           slug: formData.slug,
-          description: formData.description,
+          description_th: formData.description_th || undefined,
+          description_en: formData.description_en || undefined,
           isActive: formData.isActive,
         });
         toast.success(t('categoryUpdatedSuccess'));
       } else {
         await createCategory({
-          name: formData.name,
+          name_th: formData.name_th,
+          name_en: formData.name_en,
           slug: formData.slug,
-          description: formData.description,
+          description_th: formData.description_th || undefined,
+          description_en: formData.description_en || undefined,
           isActive: formData.isActive,
         });
         toast.success(t('categoryCreatedSuccess'));
@@ -217,9 +231,13 @@ export default function AdminCategoriesPage() {
                             <Tag size={20} className="text-gray-600" />
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-gray-900">{category.name}</p>
-                            {category.description && (
-                              <p className="text-xs text-gray-500">{category.description}</p>
+                            <p className="text-sm font-semibold text-gray-900">
+                              {category.name_th || category.name || 'N/A'} / {category.name_en || category.name || 'N/A'}
+                            </p>
+                            {(category.description_th || category.description) && (
+                              <p className="text-xs text-gray-500">
+                                {category.description_th || category.description}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -249,7 +267,7 @@ export default function AdminCategoriesPage() {
                             <Edit2 size={18} />
                           </button>
                           <button
-                            onClick={() => handleDelete(category.id, category.name)}
+                            onClick={() => handleDelete(category.id, category.name_th || category.name_en || category.name || 'this category')}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete"
                           >
@@ -286,12 +304,26 @@ export default function AdminCategoriesPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Category Name <span className="text-red-500">*</span>
+                    Category Name (Thai) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => handleNameChange(e.target.value)}
+                    value={formData.name_th}
+                    onChange={(e) => handleNameChange(e.target.value, 'th')}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    placeholder="e.g., เสื้อยืด"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category Name (English) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.name_en}
+                    onChange={(e) => handleNameChange(e.target.value, 'en')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="e.g., T-Shirts"
                     required
@@ -315,11 +347,24 @@ export default function AdminCategoriesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Description (Optional)
+                    Description (Thai)
                   </label>
                   <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    value={formData.description_th}
+                    onChange={(e) => setFormData({ ...formData, description_th: e.target.value })}
+                    rows={3}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    placeholder="คำอธิบายหมวดหมู่สั้นๆ"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description (English)
+                  </label>
+                  <textarea
+                    value={formData.description_en}
+                    onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
                     rows={3}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="Brief description of this category"
