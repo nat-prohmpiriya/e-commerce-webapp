@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Check, X } from 'lucide-react';
 import { useSettings } from '@/context/SettingsContext';
 import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
@@ -10,6 +11,8 @@ export default function SettingsPage() {
   const t = useTranslations('Account');
   const router = useRouter();
   const { settings, loading, updateAppSettings } = useSettings();
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false);
 
   const handleToggleAppearance = async (value: 'light' | 'dark' | 'system') => {
     try {
@@ -51,18 +54,20 @@ export default function SettingsPage() {
   const handleLanguageChange = async (language: string) => {
     try {
       await updateAppSettings({ language });
-      toast.success(`Language changed to ${language}`);
+      toast.success(t('languageChanged', { language }));
+      setShowLanguageModal(false);
     } catch (error) {
-      toast.error('Failed to change language');
+      toast.error(t('languageChangeFailed'));
     }
   };
 
   const handleCurrencyChange = async (currency: string) => {
     try {
       await updateAppSettings({ currency });
-      toast.success(`Currency changed to ${currency}`);
+      toast.success(t('currencyChanged', { currency }));
+      setShowCurrencyModal(false);
     } catch (error) {
-      toast.error('Failed to change currency');
+      toast.error(t('currencyChangeFailed'));
     }
   };
 
@@ -108,6 +113,19 @@ export default function SettingsPage() {
       description: t('downloadOverWifiDesc'),
       enabled: settings.app.media.downloadOverWifi,
     },
+  ];
+
+  const languageOptions = [
+    { code: 'en', name: 'English (US)', nativeName: 'English' },
+    { code: 'th', name: 'Thai', nativeName: 'ไทย' },
+  ];
+
+  const currencyOptions = [
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'THB', name: 'Thai Baht', symbol: '฿' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'GBP', name: 'British Pound', symbol: '£' },
+    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
   ];
 
   return (
@@ -231,7 +249,7 @@ export default function SettingsPage() {
           <h2 className="text-lg font-bold text-gray-900 mb-4">{t('general')}</h2>
           <div className="space-y-3">
             <button
-              onClick={() => toast('Language selection menu', { icon: 'ℹ️' })}
+              onClick={() => setShowLanguageModal(true)}
               className="w-full bg-white rounded-2xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <div className="text-left">
@@ -239,13 +257,13 @@ export default function SettingsPage() {
                   {t('language')}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {settings.app.language === 'en' ? 'English (US)' : settings.app.language}
+                  {languageOptions.find(lang => lang.code === settings.app.language)?.nativeName || settings.app.language}
                 </p>
               </div>
               <ChevronRight size={20} className="text-gray-400" />
             </button>
             <button
-              onClick={() => toast('Currency selection menu', { icon: 'ℹ️' })}
+              onClick={() => setShowCurrencyModal(true)}
               className="w-full bg-white rounded-2xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
               <div className="text-left">
@@ -253,7 +271,7 @@ export default function SettingsPage() {
                   {t('currency')}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {settings.app.currency} ({settings.app.currency === 'USD' ? '$' : settings.app.currency})
+                  {currencyOptions.find(curr => curr.code === settings.app.currency)?.symbol || ''} {settings.app.currency} - {currencyOptions.find(curr => curr.code === settings.app.currency)?.name || settings.app.currency}
                 </p>
               </div>
               <ChevronRight size={20} className="text-gray-400" />
@@ -318,6 +336,86 @@ export default function SettingsPage() {
           <p className="text-xs text-gray-400 mt-1">{t('copyright')}</p>
         </div>
       </div>
+
+      {/* Language Selection Modal */}
+      {showLanguageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">{t('language')}</h2>
+              <button
+                onClick={() => setShowLanguageModal(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+            <div className="space-y-2">
+              {languageOptions.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => handleLanguageChange(lang.code)}
+                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-colors ${
+                    settings.app.language === lang.code
+                      ? 'bg-black text-white'
+                      : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
+                  }`}
+                >
+                  <div className="text-left">
+                    <p className="font-semibold">{lang.nativeName}</p>
+                    <p className={`text-sm ${settings.app.language === lang.code ? 'text-gray-300' : 'text-gray-500'}`}>
+                      {lang.name}
+                    </p>
+                  </div>
+                  {settings.app.language === lang.code && (
+                    <Check size={20} />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Currency Selection Modal */}
+      {showCurrencyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">{t('currency')}</h2>
+              <button
+                onClick={() => setShowCurrencyModal(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+            <div className="space-y-2">
+              {currencyOptions.map((curr) => (
+                <button
+                  key={curr.code}
+                  onClick={() => handleCurrencyChange(curr.code)}
+                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-colors ${
+                    settings.app.currency === curr.code
+                      ? 'bg-black text-white'
+                      : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
+                  }`}
+                >
+                  <div className="text-left">
+                    <p className="font-semibold">{curr.symbol} {curr.code}</p>
+                    <p className={`text-sm ${settings.app.currency === curr.code ? 'text-gray-300' : 'text-gray-500'}`}>
+                      {curr.name}
+                    </p>
+                  </div>
+                  {settings.app.currency === curr.code && (
+                    <Check size={20} />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

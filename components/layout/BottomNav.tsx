@@ -61,7 +61,8 @@ export default function BottomNav() {
         router.push(item.path);
     };
 
-    if (pathname !== '/' && pathname !== '/account' && pathname !== '/favorites') {
+    // Show BottomNav on all pages except admin pages
+    if (pathname.startsWith(`/${locale}/admin`)) {
         return null;
     }
 
