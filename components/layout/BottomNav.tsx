@@ -66,6 +66,10 @@ export default function BottomNav() {
         return null;
     }
 
+    if (pathname === `/${locale}/checkout` || pathname === `/${locale}/cart`) {
+        return null;
+    }
+
     return (
         <div className="md:hidden fixed bottom-2 left-0 right-0 max-w-[432px] mx-auto z-50 px-2">
             <div className="bg-black rounded-4xl px-6 py-4 shadow-2xl">

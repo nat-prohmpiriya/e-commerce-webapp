@@ -190,7 +190,7 @@ export default function CheckoutPage() {
           </button>
           <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
           <button className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors">
-            <Menu size={24} />
+            {/* <Menu size={24} /> */}
           </button>
         </div>
       </div>
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
           <button
             onClick={handlePaymentClick}
             disabled={isProcessing}
-            className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed "
           >
             {t('pay')} ${total.toFixed(2)}
           </button>
