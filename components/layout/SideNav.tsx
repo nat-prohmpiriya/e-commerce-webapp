@@ -88,7 +88,7 @@ export default function SideNav() {
     return (
         <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex-col z-40">
             {/* Logo/Brand */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-gray-200">
                 <h1 className="text-2xl font-bold text-gray-900">StyleShop</h1>
             </div>
 
@@ -106,8 +106,8 @@ export default function SideNav() {
                                 <button
                                     onClick={() => handleNavClick(item)}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive
-                                            ? 'bg-black text-white'
-                                            : 'text-gray-700 hover:bg-gray-100'
+                                        ? 'bg-black text-white'
+                                        : 'text-gray-700 hover:bg-gray-100'
                                         }`}
                                 >
                                     <div className="relative">
@@ -126,11 +126,10 @@ export default function SideNav() {
                 </ul>
             </nav>
 
-            {/* Language Switcher */}
-            <LanguageSwitcher />
+
             {/* User Profile Section */}
             {user && (
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-6 border-b border-gray-200 border-t">
                     <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
                             {user.photoURL ? (
@@ -158,6 +157,8 @@ export default function SideNav() {
                     </div>
                 </div>
             )}
+            {/* Language Switcher */}
+            <LanguageSwitcher />
             {/* Bottom Actions */}
             <div className="p-4 border-t border-gray-200">
                 {user ? (
