@@ -24,18 +24,14 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
   // Load categories from Firestore
   const loadCategories = async (): Promise<Category[]> => {
     try {
-      console.log('🔵 [CategoryContext] Starting to load categories...');
       const categoriesRef = collection(db, 'categories');
-      console.log('🔵 [CategoryContext] Categories collection ref:', categoriesRef);
 
       const q = query(categoriesRef, orderBy('name_en', 'asc'));
       const querySnapshot = await getDocs(q);
-      console.log('🔵 [CategoryContext] Query snapshot size:', querySnapshot.size);
 
       const firestoreCategories: Category[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log('🔵 [CategoryContext] Document data:', doc.id, data);
         firestoreCategories.push({
           ...data,
           id: doc.id,
@@ -44,8 +40,6 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
         } as unknown as Category);
       });
 
-      console.log('🔵 [CategoryContext] Total categories loaded:', firestoreCategories.length);
-      console.log('🔵 [CategoryContext] Categories:', firestoreCategories);
       return firestoreCategories;
     } catch (error) {
       console.error('🔴 [CategoryContext] Error loading categories:', error);

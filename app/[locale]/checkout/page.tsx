@@ -10,6 +10,11 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
+import dynamic from 'next/dynamic';
+
+const StripePaymentForm = dynamic(() => import('@/components/checkout/StripePaymentForm'), {
+  ssr: false,
+});
 
 export default function CheckoutPage() {
   const t = useTranslations('Checkout');
@@ -19,6 +24,7 @@ export default function CheckoutPage() {
   const { addresses, getSelectedAddress, selectAddress } = useAddress();
   const { createOrder } = useOrder();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const selectedAddress = getSelectedAddress();
   const subtotal = getCartTotal();
@@ -27,14 +33,15 @@ export default function CheckoutPage() {
   const total = subtotal + shippingFee - discount;
   const totalItems = getCartItemCount();
 
-  const handlePayment = async () => {
+  const handlePaymentClick = () => {
     if (!selectedAddress) {
       toast.error(t('selectAddress'));
       return;
     }
+    setShowPaymentForm(true);
+  };
 
-    if (isProcessing) return;
-
+  const handlePaymentSuccess = async () => {
     setIsProcessing(true);
 
     try {
@@ -70,8 +77,8 @@ export default function CheckoutPage() {
         },
         paymentMethod: {
           type: 'card',
-          cardBrand: 'visa',
-          last4: '2143',
+          cardBrand: 'stripe',
+          last4: '****',
         },
       });
 
@@ -89,6 +96,10 @@ export default function CheckoutPage() {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const handlePaymentError = (error: string) => {
+    toast.error(error);
   };
 
   const handleAddressClick = () => {
@@ -210,20 +221,6 @@ export default function CheckoutPage() {
           )}
         </div>
 
-        {/* Payment Method */}
-        <div className="bg-white rounded-2xl p-4">
-          <h2 className="font-semibold text-gray-900 mb-3">{t('paymentMethod')}</h2>
-          <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">
-                VISA
-              </div>
-              <span className="text-sm text-gray-700">**** **** **** 2143</span>
-            </div>
-            <ChevronDown size={20} className="text-gray-500" />
-          </button>
-        </div>
-
         {/* Price Breakdown */}
         <div className="bg-white rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between text-sm">
@@ -247,16 +244,37 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      {/* Pay Button */}
-      <div className="fixed bottom-0 left-0 right-0 w-[432px] mx-auto bg-white border-t border-gray-200 px-4 py-4 shadow-lg z-20">
-        <button
-          onClick={handlePayment}
-          disabled={isProcessing}
-          className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          {isProcessing ? t('processing') : t('pay')}
-        </button>
-      </div>
+      {/* Payment Section */}
+      {showPaymentForm ? (
+        <div className="px-4 pb-32">
+          <div className="bg-white rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-semibold text-gray-900">Payment</h2>
+              <button
+                onClick={() => setShowPaymentForm(false)}
+                className="text-sm text-gray-600 hover:text-gray-900"
+              >
+                Back
+              </button>
+            </div>
+            <StripePaymentForm
+              amount={total}
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentError}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="fixed bottom-0 left-0 right-0 w-[432px] mx-auto bg-white border-t border-gray-200 px-4 py-4 shadow-lg z-20">
+          <button
+            onClick={handlePaymentClick}
+            disabled={isProcessing}
+            className="w-full bg-black text-white py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {t('pay')} ${total.toFixed(2)}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
