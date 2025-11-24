@@ -26,8 +26,7 @@ export default function LanguageSwitcher() {
   const currentLanguage = languages.find((lang) => lang.code === locale);
 
   return (
-    <div className="flex items-center gap-3 p-4 border-t border-gray-200">
-      <Globe size={20} className="text-gray-500 flex-shrink-0" />
+    <div className="flex items-center gap-3 p-2">
       <div className="flex-1">
         <select
           value={locale}

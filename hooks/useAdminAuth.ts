@@ -12,7 +12,7 @@ export function useAdminAuth() {
     if (!loading) {
       if (!user) {
         // Not logged in, redirect to login
-        router.push('/auth/login?redirect=/admin');
+        router.push('/');
       } else if (!isAdmin) {
         // Logged in but not admin, redirect to home
         router.push('/');
