@@ -3,18 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { collection, doc, setDoc, updateDoc, deleteDoc, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  imageUrl?: string;
-  productCount: number;
-  isActive: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
+import { Category } from '@/types';
 
 interface CategoryContextType {
   categories: Category[];

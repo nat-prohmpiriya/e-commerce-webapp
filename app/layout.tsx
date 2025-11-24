@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import LayoutApp from "@/components/layout/LayoutApp";
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
@@ -42,9 +41,7 @@ export default function RootLayout({
 											<AddressProvider>
 												<OrderProvider>
 													<SettingsProvider>
-														<LayoutApp>
-															{children}
-														</LayoutApp>
+														{children}
 														<Toaster
 															position="top-center"
 															reverseOrder={false}
