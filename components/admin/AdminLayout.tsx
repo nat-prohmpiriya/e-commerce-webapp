@@ -19,6 +19,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import Image from 'next/image';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -152,7 +153,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </nav>
 
           {/* User info & Logout */}
-          <div className="border-t px-3 py-4">
+          <div className="border-t border-b border-gray-200 py-4">
             <div className="flex items-center gap-3 px-3 py-2 mb-2">
               <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                 {user?.photoURL ? (
@@ -176,14 +177,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 <p className="text-xs text-gray-500 truncate">{user?.email}</p>
               </div>
             </div>
-            <button
-              onClick={handleSignOut}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-            >
-              <LogOut size={20} />
-              <span>Sign Out</span>
-            </button>
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            <div className='border-t border-gray-200 flex my-auto pt-4 px-3'>
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut size={20} />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
+
         </div>
       </aside>
 
