@@ -16,6 +16,7 @@ import {
   ChevronRight,
   FolderOpen,
   Database,
+  MessageSquare,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -43,6 +44,11 @@ const navigation = [
     name: 'Orders',
     href: '/admin/orders',
     icon: ShoppingCart,
+  },
+  {
+    name: 'Reviews',
+    href: '/admin/reviews',
+    icon: MessageSquare,
   },
   {
     name: 'Users',
